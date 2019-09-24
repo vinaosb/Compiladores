@@ -1,6 +1,6 @@
 ﻿// ################################################
 // Uiversidade Federal de Santa Catarina
-// INE5421 - Linguagens Formais e Compiladores
+// INE5426 - Construção de Compiladores
 // Trabalho 1 - 2018/2
 // Alunos:
 //		- Bruno George Marques (14100825)
