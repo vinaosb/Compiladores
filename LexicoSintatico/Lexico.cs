@@ -1,4 +1,14 @@
-﻿using System;
+﻿// ################################################
+// Uiversidade Federal de Santa Catarina
+// INE5421 - Linguagens Formais e Compiladores
+// Trabalho 1 - 2018/2
+// Alunos:
+//		- Bruno George Marques (14100825)
+//      - Renan Pinho Assi (12200656)
+//      - Marcelo José Dias (15205398)
+//      - Vinícius Schwinden Berkenbrock (16100751)
+//#################################################
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -10,6 +20,7 @@ namespace FormaisECompiladores
 
 		public enum Attributes
 		{
+			ID, // IDENT
 			BRKTPARE, // {}[]()
 			INT, // Inteiros
 			FLOAT, // Floats
@@ -28,12 +39,13 @@ namespace FormaisECompiladores
 		};
 		public enum Terminals
 		{
+			IDENT, // ID
 			OPENBRACE, CLOSEBRACE, OPENBRKT, CLOSEBRKT, OPENPARENT, CLOSEPARENT, // {}[]()
 			INT, // int_constant
 			STR, // string_constant
 			FLT, // float_constant
 			INTEGER_T, FLOAT_T, STRING_T, NULL, // tipos: int, float, string, null
-			PRINT, RETURN, READ, IDENT, // print, return, read, ident
+			PRINT, RETURN, READ, // print, return, read
 			IF, ELSE, FOR, BREAK,
 			ASSERT, // =
 			LT, LE, EQ, GT, GE, NE, // < <= == > >= <>
@@ -79,7 +91,6 @@ namespace FormaisECompiladores
 			TokenCorrelation.Add("print", Terminals.PRINT);
 			TokenCorrelation.Add("return", Terminals.RETURN);
 			TokenCorrelation.Add("read", Terminals.READ);
-			TokenCorrelation.Add("ident", Terminals.IDENT);
 			TokenCorrelation.Add("if", Terminals.IF);
 			TokenCorrelation.Add("else", Terminals.ELSE);
 			TokenCorrelation.Add("for", Terminals.FOR);
@@ -98,6 +109,7 @@ namespace FormaisECompiladores
 			TokenCorrelation.Add("%", Terminals.MODULUS);
 			TokenCorrelation.Add(";", Terminals.SEPARATOR);
 
+			AttrCorrelation.Add(Terminals.IDENT, Attributes.ID);
 			AttrCorrelation.Add(Terminals.OPENBRACE, Attributes.BRKTPARE);
 			AttrCorrelation.Add(Terminals.OPENBRKT, Attributes.BRKTPARE);
 			AttrCorrelation.Add(Terminals.OPENPARENT, Attributes.BRKTPARE);
@@ -183,6 +195,8 @@ namespace FormaisECompiladores
 			if (TokenCorrelation.ContainsKey(s))
 				return TokenCorrelation.GetValueOrDefault(s);
 			if (Char.IsLetter(s[0]))
+				return Terminals.IDENT;
+			if (Char.Equals(s[0], '"'))
 				return Terminals.STR;
 			Console.WriteLine("{0} é invalido", s);
 			return Terminals.ERROR;
