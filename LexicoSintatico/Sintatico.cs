@@ -109,7 +109,7 @@ namespace FormaisECompiladores
 						break;
 					case NonTerminal.DECL:
 						lp.Add(new prod { nonterminal = NonTerminal.TYPE, terminal = Token.Terminals.EMPTY });
-						lp.Add(new prod { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.ID });
+						lp.Add(new prod { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.IDENT });
 						lp.Add(new prod { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.SEPARATOR });
 						llp.Add(lp);
 						break;
@@ -120,7 +120,7 @@ namespace FormaisECompiladores
 						break;
 					case NonTerminal.TYPES:
 						lp.Add(new prod { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OPENBRKT });
-						lp.Add(new prod { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.NUM });
+						lp.Add(new prod { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.INT });
 						lp.Add(new prod { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.CLOSEBRKT });
 						lp.Add(new prod { nonterminal = NonTerminal.TYPES, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
@@ -233,7 +233,7 @@ namespace FormaisECompiladores
 						llp.Add(lp);
 						break;
 					case NonTerminal.LOC:
-						lp.Add(new prod { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.ID });
+						lp.Add(new prod { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.IDENT });
 						lp.Add(new prod { nonterminal = NonTerminal.LOCS, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						break;
@@ -391,11 +391,11 @@ namespace FormaisECompiladores
 						llp.Add(lp);
 						lp = new List<prod>();
 						lp.Clear();
-						lp.Add(new prod { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.NUM });
+						lp.Add(new prod { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.INT });
 						llp.Add(lp);
 						lp = new List<prod>();
 						lp.Clear();
-						lp.Add(new prod { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.REAL });
+						lp.Add(new prod { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.FLT });
 						llp.Add(lp);
 						lp = new List<prod>();
 						lp.Clear();
@@ -751,7 +751,7 @@ namespace FormaisECompiladores
 						{
 							if (p.nonterminal.Equals(NonTerminal.EMPTY))
 							{
-								if (p.terminal.Equals(Token.Terminals.ID))
+								if (p.terminal.Equals(Token.Terminals.IDENT))
 								{
 									st += p.terminal + " ";
 									continue;
@@ -832,7 +832,7 @@ namespace FormaisECompiladores
 					{
 						if (p.nonterminal.Equals(NonTerminal.EMPTY))
 						{
-							if (p.terminal.Equals(Token.Terminals.ID))
+							if (p.terminal.Equals(Token.Terminals.IDENT))
 							{
 								st += p.terminal + " ";
 								continue;
