@@ -29,12 +29,12 @@ namespace FormaisECompiladores
 
 			Token t = new Token(path);
 			List<Token.Tok> lt = t.ReadFile();
-			//Console.WriteLine("Analise Lexica");
-			//foreach (var l in lt)
-			//{
-			//    Console.WriteLine("<{0},{1}>", l.a, l.s);
-			//}
-			Sintatico s = new Sintatico();
+			Console.WriteLine("Analise Lexica");
+			foreach (var l in lt)
+			{
+			    Console.WriteLine("<{0},{1}>", l.a, l.s);
+			}
+			/*Sintatico s = new Sintatico();
 			// ##### PRINT PARSING TABLE ####
 			Console.WriteLine("");
 			Console.WriteLine("Parsing Table:");
@@ -60,7 +60,7 @@ namespace FormaisECompiladores
 					Console.WriteLine("{0},{1}->{2}", sy.Key.nonterminal, sy.Key.terminal, prod);
 				}
 				// ##### END PRINT PARSING TABLE ####
-
+				
 				if (s.predictiveParser(lt, false))
 					Console.WriteLine("Entrada Aceita");
 				else
@@ -71,10 +71,10 @@ namespace FormaisECompiladores
 				Console.Write("\n\nWriting output.txt");
 				s.WriteOutput(lt);
 			}
-
+			*/
 			// Console.WriteLine('\u025B');
 			Console.Read();
-
+			
 		}
 	}
 }

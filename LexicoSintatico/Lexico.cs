@@ -108,6 +108,7 @@ namespace FormaisECompiladores
 			TokenCorrelation.Add("/", Terminals.DIVIDE);
 			TokenCorrelation.Add("%", Terminals.MODULUS);
 			TokenCorrelation.Add(";", Terminals.SEPARATOR);
+			TokenCorrelation.Add("stringExtensa", Terminals.STR);
 
 			AttrCorrelation.Add(Terminals.IDENT, Attributes.ID);
 			AttrCorrelation.Add(Terminals.OPENBRACE, Attributes.BRKTPARE);
@@ -164,11 +165,45 @@ namespace FormaisECompiladores
 			return LT;
 		}
 
+		private String addSpace(String line)
+		{
+			foreach(char c in line)
+			{
+				if (c.Equals('{')
+					| c.Equals('}')
+					| c.Equals('[')
+					| c.Equals(']')
+					| c.Equals('(')
+					| c.Equals(')')
+					| c.Equals('=')
+					| c.Equals('<')
+					| c.Equals('>')
+					| c.Equals('!')
+					| c.Equals('+')
+					| c.Equals('-')
+					| c.Equals('*')
+					| c.Equals('/')
+					| c.Equals('%')
+					| c.Equals(';'))
+					line.Replace(c.ToString(), " " + c.ToString() + " ");
+
+				line.Replace("  ", " ");
+			}
+			line.Replace("= =", "==");
+			line.Replace("< =", "<=");
+			line.Replace("> =", ">=");
+			line.Replace("! =", "!=");
+
+			return line;
+		}
+
 		public List<Tok> Tokenize(String s)
 		{
 			List<Tok> tokens = new List<Tok>();
 			char[] charSeparator = new char[] { ' ' };
 			string[] result;
+
+			s = addSpace(s);
 
 			result = s.Split(charSeparator, StringSplitOptions.RemoveEmptyEntries);
 
