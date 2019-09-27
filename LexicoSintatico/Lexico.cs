@@ -1,7 +1,7 @@
 ﻿// ################################################
 // Uiversidade Federal de Santa Catarina
 // INE5426 - Construção de Compiladores
-// Trabalho 1 - 2018/2
+// Trabalho 1 - 2019/2
 // Alunos:
 //		- Bruno George Marques (14100825)
 //      - Renan Pinho Assi (12200656)
