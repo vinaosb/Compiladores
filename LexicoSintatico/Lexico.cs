@@ -3,9 +3,9 @@
 // INE5426 - Construção de Compiladores
 // Trabalho 1 - 2019/2
 // Alunos:
-//		- Bruno George Marques (14100825)
-//      - Renan Pinho Assi (12200656)
-//      - Marcelo José Dias (15205398)
+//		- Bruno George Marques           (14100825)
+//      - Marcelo José Dias              (15205398)
+//      - Renan Pinho Assi               (12200656)
 //      - Vinícius Schwinden Berkenbrock (16100751)
 //#################################################
 using System;
@@ -61,7 +61,12 @@ namespace FormaisECompiladores
 		public Dictionary<string, Terminals> TokenCorrelation;
 		public Dictionary<Terminals, Attributes> AttrCorrelation;
 
-		public struct Tok
+        // Could be moved to a better place
+        public Dictionary<string, string> mapString;
+        public string prefix_identifier = "STRING_CONTENT_";
+        public int counter = 0;
+
+        public struct Tok
 		{
 			public string s;
 			public Terminals t;
@@ -73,7 +78,8 @@ namespace FormaisECompiladores
 			path = Path;
 			TokenCorrelation = new Dictionary<string, Terminals>();
 			AttrCorrelation = new Dictionary<Terminals, Attributes>();
-			init();
+            mapString = new Dictionary<string, string>();
+            init();
 		}
 
 		public void init()
@@ -147,13 +153,52 @@ namespace FormaisECompiladores
 			{   // Open the text file using a stream reader.
 				using (StreamReader sr = new StreamReader(path))
 				{
-					// Read the stream to a string, and write the string to the console.
-					while (sr.Peek() >= 0)
-					{
-						String line = sr.ReadLine();
+                    // Raw Text
+                    String full_text = "";
+                    String uniline_text = "";
+                    String token_string_text = "";
+                    while (sr.Peek() >= 0)
+                    {
+                        // Add Each Line to full_text variable
+                        string line = sr.ReadLine();
+                        uniline_text += line.Trim();
+                        full_text += line;
+                        // Also, skip to the next line
+                        full_text += "\n";
+                    }
 
-						LT.AddRange(Tokenize(line));
-					}
+                    char[] charSeparator = new char[] { ' ' };
+                    string[] register = uniline_text.Split(charSeparator, StringSplitOptions.RemoveEmptyEntries);
+                    uniline_text = string.Join(" ", uniline_text.Split(charSeparator, StringSplitOptions.RemoveEmptyEntries)).Trim();
+                    token_string_text = searchStrings(uniline_text);
+
+                    // Print Original Code
+                    Console.WriteLine("Original Code:");
+                    Console.WriteLine(full_text);
+                    Console.WriteLine("----");
+
+                    Console.WriteLine("Minified Code:");
+                    Console.WriteLine(uniline_text);
+                    Console.WriteLine("----");
+
+
+                    Console.WriteLine("String Hunted Code:");
+                    Console.WriteLine(token_string_text);
+                    Console.WriteLine("----");
+
+
+                    /* 
+                     * Passing Just one line with everything 
+                     * If break lines are important we can mark it
+                     */
+
+                    //  // Read the stream to a string, and write the string to the console.
+                    //  while (sr.Peek() >= 0) { 
+                    //      String line = sr.ReadLine();
+                    //      Console.WriteLine(line);
+
+                    LT.AddRange(Tokenize(token_string_text));
+					//  }
 				}
 			}
 			catch (Exception e)
@@ -164,6 +209,44 @@ namespace FormaisECompiladores
 
 			return LT;
 		}
+
+        private String searchStrings(String text)
+        {
+            string result = String.Copy(text);
+            string substring = "";
+            Boolean open_string = false;
+
+            foreach (char c in text)
+            {
+                Boolean isQuote = c.Equals('\"');
+
+                if (open_string || isQuote)
+                {
+                    substring += c;
+                }
+
+                if (isQuote)
+                {
+                    if (open_string)
+                    {
+                        String mapped_string_identifier = (prefix_identifier + counter);
+                        open_string = false;
+                        result = result.Replace(substring, mapped_string_identifier);
+                        mapString.Add(mapped_string_identifier, substring);
+                        substring = "";
+                        counter++;
+                    }
+                    else
+                    {
+                        open_string = true;
+                    }
+                }
+                
+            }
+
+            return result;
+        }
+
 
 		private String addSpace(String line)
 		{
@@ -185,14 +268,14 @@ namespace FormaisECompiladores
 					| c.Equals('/')
 					| c.Equals('%')
 					| c.Equals(';'))
-					line.Replace(c.ToString(), " " + c.ToString() + " ");
+                    line = line.Replace(c.ToString(), " " + c.ToString() + " ");
 
-				line.Replace("  ", " ");
+                line = line.Replace("  ", " ");
 			}
-			line.Replace("= =", "==");
-			line.Replace("< =", "<=");
-			line.Replace("> =", ">=");
-			line.Replace("! =", "!=");
+            line = line.Replace("= =", "==");
+            line = line.Replace("< =", "<=");
+            line = line.Replace("> =", ">=");
+            line = line.Replace("! =", "!=");
 
 			return line;
 		}
@@ -209,9 +292,13 @@ namespace FormaisECompiladores
 
 			foreach (var r in result)
 			{
+                string real_r = r;
+                if (mapString.ContainsKey(r)) {
+                    real_r = mapString.GetValueOrDefault(r);
+                }
 				Tok temp;
-				temp.s = r;
-				temp.t = getTerminal(r);
+				temp.s = real_r;
+				temp.t = getTerminal(real_r);
 				temp.a = AttrCorrelation.GetValueOrDefault(temp.t);
 				tokens.Add(temp);
 			}

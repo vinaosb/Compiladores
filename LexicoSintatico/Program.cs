@@ -3,9 +3,9 @@
 // INE5426 - Construção de Compiladores
 // Trabalho 1 - 2019/2
 // Alunos:
-//		- Bruno George Marques (14100825)
-//      - Renan Pinho Assi (12200656)
-//      - Marcelo José Dias (15205398)
+//		- Bruno George Marques           (14100825)
+//      - Marcelo José Dias              (15205398)
+//      - Renan Pinho Assi               (12200656)
 //      - Vinícius Schwinden Berkenbrock (16100751)
 //#################################################
 using System;
@@ -22,10 +22,10 @@ namespace FormaisECompiladores
 			Console.WriteLine("===### Analise Sintatica ###===");
 			string name;
 			string path = @"";
-			Console.WriteLine("Escreva o nome do arquivo");
-			name = Console.ReadLine();
+			//Console.WriteLine("Escreva o nome do arquivo");
+			//name = Console.ReadLine();
 
-			path += name;
+			path = "C:/UFSC/Compiladores/Compilador_T1/LexicoSintatico/abc.txt";
 
 			Token t = new Token(path);
 			List<Token.Tok> lt = t.ReadFile();

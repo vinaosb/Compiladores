@@ -3,9 +3,9 @@
 // INE5426 - Construção de Compiladores
 // Trabalho 1 - 2019/2
 // Alunos:
-//		- Bruno George Marques (14100825)
-//      - Renan Pinho Assi (12200656)
-//      - Marcelo José Dias (15205398)
+//		- Bruno George Marques           (14100825)
+//      - Marcelo José Dias              (15205398)
+//      - Renan Pinho Assi               (12200656)
 //      - Vinícius Schwinden Berkenbrock (16100751)
 //#################################################
 using System;
@@ -114,7 +114,7 @@ namespace FormaisECompiladores
 						llp.Add(lp);
 						break;
 					case NonTerminal.TYPE:
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.BASIC });
+						//lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.BASIC });
 						lp.Add(new simbolo { nonterminal = NonTerminal.TYPES, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						break;
@@ -150,7 +150,7 @@ namespace FormaisECompiladores
 						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.WHILE });
+						//lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.WHILE });
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OPENPARENT });
 						lp.Add(new simbolo { nonterminal = NonTerminal.BOOL, terminal = Token.Terminals.EMPTY });
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.CLOSEPARENT });
@@ -158,9 +158,9 @@ namespace FormaisECompiladores
 						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.DO });
+						//lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.DO });
 						lp.Add(new simbolo { nonterminal = NonTerminal.STMT, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.WHILE });
+						//lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.WHILE });
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OPENPARENT });
 						lp.Add(new simbolo { nonterminal = NonTerminal.BOOL, terminal = Token.Terminals.EMPTY });
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.CLOSEPARENT });
@@ -184,7 +184,7 @@ namespace FormaisECompiladores
 						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.WHILE });
+						//lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.WHILE });
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OPENPARENT });
 						lp.Add(new simbolo { nonterminal = NonTerminal.BOOL, terminal = Token.Terminals.EMPTY });
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.CLOSEPARENT });
@@ -192,9 +192,9 @@ namespace FormaisECompiladores
 						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.DO });
+						//lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.DO });
 						lp.Add(new simbolo { nonterminal = NonTerminal.STMTX, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.WHILE });
+						//lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.WHILE });
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OPENPARENT });
 						lp.Add(new simbolo { nonterminal = NonTerminal.BOOL, terminal = Token.Terminals.EMPTY });
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.CLOSEPARENT });
@@ -218,7 +218,7 @@ namespace FormaisECompiladores
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OPENPARENT });
 						lp.Add(new simbolo { nonterminal = NonTerminal.BOOL, terminal = Token.Terminals.EMPTY });
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.CLOSEPARENT });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.THEN });
+						//lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.THEN });
 						lp.Add(new simbolo { nonterminal = NonTerminal.STMTX, terminal = Token.Terminals.EMPTY });
 						lp.Add(new simbolo { nonterminal = NonTerminal.OPEN_IF2, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
@@ -254,7 +254,7 @@ namespace FormaisECompiladores
 						llp.Add(lp);
 						break;
 					case NonTerminal.BOOL2:
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OR });
+						//lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OR });
 						lp.Add(new simbolo { nonterminal = NonTerminal.BOOL, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						lp = new List<simbolo>();
@@ -268,7 +268,7 @@ namespace FormaisECompiladores
 						llp.Add(lp);
 						break;
 					case NonTerminal.JOIN2:
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.AND });
+						//lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.AND });
 						lp.Add(new simbolo { nonterminal = NonTerminal.JOIN, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						lp = new List<simbolo>();
@@ -367,7 +367,7 @@ namespace FormaisECompiladores
 						llp.Add(lp);
 						break;
 					case NonTerminal.UNARY:
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.NOT });
+						//lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.NOT });
 						lp.Add(new simbolo { nonterminal = NonTerminal.UNARY, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						lp = new List<simbolo>();
@@ -399,11 +399,11 @@ namespace FormaisECompiladores
 						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.TRUE });
+						//lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.TRUE });
 						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.FALSE });
+						//lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.FALSE });
 						llp.Add(lp);
 						break;
 

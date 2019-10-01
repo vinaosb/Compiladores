@@ -3,6 +3,9 @@
   float x;
   float z;
   int i;
+  string not_used = "Uma frase qualquer";
+  string mais_uma_string = "Uma outra frase";
+  string fus = mais_uma_string + " - " + not_used;
   int max;
   x = 0;
   max = 10000;
