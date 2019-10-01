@@ -29,7 +29,7 @@ namespace FormaisECompiladores
 
 			Token t = new Token(path);
 			List<Token.Tok> lt = t.ReadFile();
-			Console.WriteLine("Analise Lexica");
+			Console.WriteLine("Analise Lexica:\n");
 			foreach (var l in lt)
 			{
 			    Console.WriteLine("<{0},{1}>", l.a, l.s);

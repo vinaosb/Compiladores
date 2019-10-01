@@ -173,18 +173,18 @@ namespace FormaisECompiladores
                     token_string_text = searchStrings(uniline_text);
 
                     // Print Original Code
-                    Console.WriteLine("Original Code:");
+                    Console.WriteLine("Original Code:\n");
                     Console.WriteLine(full_text);
-                    Console.WriteLine("----");
+                    Console.WriteLine("\n\n\n\n");
 
-                    Console.WriteLine("Minified Code:");
+                    Console.WriteLine("Minified Code:\n");
                     Console.WriteLine(uniline_text);
-                    Console.WriteLine("----");
+                    Console.WriteLine("\n\n\n\n");
 
 
-                    Console.WriteLine("String Hunted Code:");
+                    Console.WriteLine("String Hunted Code:\n");
                     Console.WriteLine(token_string_text);
-                    Console.WriteLine("----");
+                    Console.WriteLine("\n\n\n\n");
 
 
                     /* 
