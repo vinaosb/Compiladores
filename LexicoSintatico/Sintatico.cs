@@ -349,7 +349,7 @@ namespace FormaisECompiladores
 						llp.Add(lp);
 						break;
 					// EXP2 -> < NUMEXPRESSION | > NUMEXPRESSION | <= NUMEXPRESSION | >= NUMEXPRESSION | == NUMEXPRESSION | ! = NUMEXPRESSION | e
-					case NonTerminal.EQUALITY2:
+					case NonTerminal.EXP2:
 						lp = new List<simbolo>();
 						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.LT });
@@ -463,7 +463,7 @@ namespace FormaisECompiladores
 						llp.Add(lp);
 						break;
 					// FACTOR -> int_constant | float_constant | string_constant | null | LVALUE |( EXPRESSION )
-					case NonTerminal.TERMS:
+					case NonTerminal.FACTOR:
 						lp = new List<simbolo>();
 						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.INT });
@@ -492,7 +492,7 @@ namespace FormaisECompiladores
 						llp.Add(lp);
 						break;
 					// LVALUE -> ident ALLOC3
-					case NonTerminal.UNARY:
+					case NonTerminal.LVALUE:
 						lp = new List<simbolo>();
 						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.IDENT });
