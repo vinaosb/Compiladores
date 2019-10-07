@@ -20,33 +20,31 @@ namespace FormaisECompiladores
 		public enum NonTerminal
 		{
 			PROGRAM,
-			BLOCK,
-			DECLS,
-			DECL,
-			TYPE,
-			TYPES,
-			STMTS,
-			STMT,
-			STMTX,
-			//MATCHED_IF,
-			OPEN_IF,
-			OPEN_IF2,
-			LOC,
-			LOCS,
-			BOOL,
-			BOOL2,
-			JOIN,
-			JOIN2,
-			EQUALITY,
-			EQUALITY2,
-			REL,
-			REL2,
-			EXPR,
-			EXPRS,
+			STATEMENT,
+			VARDECL,
+			VAR2,
+			ATRIBSTAT,
+			ATREXP,
+			PRINTSTAT,
+			READSTAT,
+			RETURNSTAT,
+			IFSTAT,
+			IF2,
+			FORSTAT,
+			STATELIST,
+			STATE2,
+			ALLOCEXPRESSION,
+			ALLOC2,
+			ALLOC3,
+			EXPRESSION,
+			EXP2,
+			NUMEXPRESSION,
+			NUM2,
 			TERM,
-			TERMS,
-			UNARY,
+			TERM2,
+			UNARYEXPR,
 			FACTOR,
+			LVALUE,
 			EMPTY // Auxiliar pro sintatico
 		};
 
@@ -81,314 +79,391 @@ namespace FormaisECompiladores
 		{
 			List<simbolo> lp;
 			List<List<simbolo>> llp;
+
 			foreach (NonTerminal nt in Enum.GetValues(typeof(NonTerminal)))
 			{
-				lp = new List<simbolo>();
 				llp = new List<List<simbolo>>();
+				/*
+				lp = new List<simbolo>();
+				lp.Clear();
+				lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.EMPTY });
+				llp.Add(lp);
+				*/
 				switch (nt)
 				{
+					// PROGRAM -> STATEMENT | &
 					case NonTerminal.PROGRAM:
-						lp.Add(new simbolo { nonterminal = NonTerminal.BLOCK, terminal = Token.Terminals.EMPTY });
-						llp.Add(lp);
-						break;
-					case NonTerminal.BLOCK:
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OPENBRACE });
-						lp.Add(new simbolo { nonterminal = NonTerminal.DECLS, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.STMTS, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.CLOSEBRACE });
-						llp.Add(lp);
-						break;
-					case NonTerminal.DECLS:
-						lp.Add(new simbolo { nonterminal = NonTerminal.DECL, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.DECLS, terminal = Token.Terminals.EMPTY });
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.STATEMENT, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						break;
-					case NonTerminal.DECL:
-						lp.Add(new simbolo { nonterminal = NonTerminal.TYPE, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.IDENT });
+					// STATEMENT -> VARDECL; | ATRIBSTAT; | PRINTSTAT; | READSTAT; | RETURNSTAT; | IFSTAT; | FORSTAT; | {STATELIST}| break ; | ;
+					case NonTerminal.STATEMENT:
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OPENBRACE });
+						lp.Add(new simbolo { nonterminal = NonTerminal.STATELIST, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.CLOSEBRACE });
+						llp.Add(lp);
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.BREAK });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.SEPARATOR });
+						llp.Add(lp);
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.VARDECL, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.SEPARATOR });
+						llp.Add(lp);
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.ATRIBSTAT, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.SEPARATOR });
+						llp.Add(lp);
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.PRINTSTAT, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.SEPARATOR });
+						llp.Add(lp);
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.READSTAT, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.SEPARATOR });
+						llp.Add(lp);
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.RETURNSTAT, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.SEPARATOR });
+						llp.Add(lp);
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.IFSTAT, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.SEPARATOR });
+						llp.Add(lp);
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.FORSTAT, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.SEPARATOR });
+						llp.Add(lp);
+						lp = new List<simbolo>();
+						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.SEPARATOR });
 						llp.Add(lp);
 						break;
-					case NonTerminal.TYPE:
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.BASIC });
-						lp.Add(new simbolo { nonterminal = NonTerminal.TYPES, terminal = Token.Terminals.EMPTY });
+					// VARDECL -> int ident VAR2 | float ident VAR2 | string ident VAR2
+					case NonTerminal.VARDECL:
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.INTEGER_T });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.IDENT });
+						lp.Add(new simbolo { nonterminal = NonTerminal.VAR2, terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.FLOAT_T });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.IDENT });
+						lp.Add(new simbolo { nonterminal = NonTerminal.VAR2, terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.STRING_T });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.IDENT });
+						lp.Add(new simbolo { nonterminal = NonTerminal.VAR2, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						break;
-					case NonTerminal.TYPES:
+					// VAR2 -> [int_constant] VAR2 | &
+					case NonTerminal.VAR2:
+						lp = new List<simbolo>();
+						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OPENBRKT });
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.INT });
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.CLOSEBRKT });
-						lp.Add(new simbolo { nonterminal = NonTerminal.TYPES, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.VAR2, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						break;
-					case NonTerminal.STMTS:
-						lp.Add(new simbolo { nonterminal = NonTerminal.STMT, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.STMTS, terminal = Token.Terminals.EMPTY });
-						llp.Add(lp);
+					// ATRIBSTAT -> LVALUE = ATREXP
+					case NonTerminal.ATRIBSTAT:
 						lp = new List<simbolo>();
 						lp.Clear();
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.EMPTY });
-						llp.Add(lp);
-						break;
-					case NonTerminal.STMT:
-						lp.Add(new simbolo { nonterminal = NonTerminal.LOC, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.LVALUE, terminal = Token.Terminals.EMPTY });
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.ASSERT });
-						lp.Add(new simbolo { nonterminal = NonTerminal.BOOL, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.SEPARATOR });
-						llp.Add(lp);
-						lp = new List<simbolo>();
-						lp.Clear();
-						lp.Add(new simbolo { nonterminal = NonTerminal.OPEN_IF, terminal = Token.Terminals.EMPTY });
-						llp.Add(lp);
-						lp = new List<simbolo>();
-						lp.Clear();
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.WHILE });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OPENPARENT });
-						lp.Add(new simbolo { nonterminal = NonTerminal.BOOL, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.CLOSEPARENT });
-						lp.Add(new simbolo { nonterminal = NonTerminal.STMT, terminal = Token.Terminals.EMPTY });
-						llp.Add(lp);
-						lp = new List<simbolo>();
-						lp.Clear();
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.DO });
-						lp.Add(new simbolo { nonterminal = NonTerminal.STMT, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.WHILE });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OPENPARENT });
-						lp.Add(new simbolo { nonterminal = NonTerminal.BOOL, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.CLOSEPARENT });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.SEPARATOR });
-						llp.Add(lp);
-						lp = new List<simbolo>();
-						lp.Clear();
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.BREAK });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.SEPARATOR });
-						llp.Add(lp);
-						lp = new List<simbolo>();
-						lp.Clear();
-						lp.Add(new simbolo { nonterminal = NonTerminal.BLOCK, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.ATREXP, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						break;
-					case NonTerminal.STMTX:
-						lp.Add(new simbolo { nonterminal = NonTerminal.LOC, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.ASSERT });
-						lp.Add(new simbolo { nonterminal = NonTerminal.BOOL, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.DECLS, terminal = Token.Terminals.SEPARATOR });
+					// ATREXP -> EXPRESSION | ALLOCEXPRESSION
+					case NonTerminal.ATREXP:
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.EXPRESSION, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.WHILE });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OPENPARENT });
-						lp.Add(new simbolo { nonterminal = NonTerminal.BOOL, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.CLOSEPARENT });
-						lp.Add(new simbolo { nonterminal = NonTerminal.STMTX, terminal = Token.Terminals.EMPTY });
-						llp.Add(lp);
-						lp = new List<simbolo>();
-						lp.Clear();
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.DO });
-						lp.Add(new simbolo { nonterminal = NonTerminal.STMTX, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.WHILE });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OPENPARENT });
-						lp.Add(new simbolo { nonterminal = NonTerminal.BOOL, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.CLOSEPARENT });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.SEPARATOR });
-						llp.Add(lp);
-						lp = new List<simbolo>();
-						lp.Clear();
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.BREAK });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.SEPARATOR });
-						llp.Add(lp);
-						lp = new List<simbolo>();
-						lp.Clear();
-						lp.Add(new simbolo { nonterminal = NonTerminal.BLOCK, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.ALLOCEXPRESSION, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						break;
-					/* MATCHED_IF desconsiderar
-                    case NonTerminal.MATCHED_IF:
-                        break; */
-					case NonTerminal.OPEN_IF:
+					// PRINTSTAT -> print EXPRESSION
+					case NonTerminal.PRINTSTAT:
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.PRINT });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EXPRESSION, terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						break;
+					// READSTAT -> read LVALUE
+					case NonTerminal.READSTAT:
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.READ });
+						lp.Add(new simbolo { nonterminal = NonTerminal.LVALUE, terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						break;
+					// RETURNSTAT -> return
+					case NonTerminal.RETURNSTAT:
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.RETURN });
+						llp.Add(lp);
+						break;
+					// IFSTAT -> if( EXPRESSION ) STATEMENT IF2
+					case NonTerminal.IFSTAT:
+						lp = new List<simbolo>();
+						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.IF });
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OPENPARENT });
-						lp.Add(new simbolo { nonterminal = NonTerminal.BOOL, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EXPRESSION, terminal = Token.Terminals.EMPTY });
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.CLOSEPARENT });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.THEN });
-						lp.Add(new simbolo { nonterminal = NonTerminal.STMTX, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.OPEN_IF2, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.STATEMENT, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.IF2, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						break;
-					case NonTerminal.OPEN_IF2:
+					// IF2 -> else STATEMENT | e
+					case NonTerminal.IF2:
+						lp = new List<simbolo>();
+						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.ELSE });
-						lp.Add(new simbolo { nonterminal = NonTerminal.STMTX, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.STATEMENT, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						break;
-					case NonTerminal.LOC:
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.IDENT });
-						lp.Add(new simbolo { nonterminal = NonTerminal.LOCS, terminal = Token.Terminals.EMPTY });
+					// FORSTAT -> for( ATRIBSTAT; NUMEXPRESSION; ATRIBSTAT) STATEMENT
+					case NonTerminal.FORSTAT:
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.FOR });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OPENPARENT });
+						lp.Add(new simbolo { nonterminal = NonTerminal.ATRIBSTAT, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.SEPARATOR });
+						lp.Add(new simbolo { nonterminal = NonTerminal.NUMEXPRESSION, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.SEPARATOR });
+						lp.Add(new simbolo { nonterminal = NonTerminal.ATRIBSTAT, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.CLOSEPARENT });
+						lp.Add(new simbolo { nonterminal = NonTerminal.STATEMENT, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						break;
-					case NonTerminal.LOCS:
+					// STATELIST -> STATEMENT STATE2
+					case NonTerminal.STATELIST:
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.STATEMENT, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.STATE2, terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						break;
+					// STATE2 -> STATELIST | &
+					case NonTerminal.STATE2:
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.STATELIST, terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						break;
+					// ALLOCEXPRESSION -> new ALLOC2
+					case NonTerminal.ALLOCEXPRESSION:
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.NEW });
+						lp.Add(new simbolo { nonterminal = NonTerminal.ALLOC2, terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						break;
+					// ALLOC2 -> int [ EXPRESSION ] ALLOC3 | float [ EXPRESSION ] ALLOC3 | string [ EXPRESSION ] ALLOC3
+					case NonTerminal.ALLOC2:
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.INTEGER_T });
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OPENBRKT });
-						lp.Add(new simbolo { nonterminal = NonTerminal.BOOL, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EXPRESSION, terminal = Token.Terminals.EMPTY });
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.CLOSEBRKT });
-						lp.Add(new simbolo { nonterminal = NonTerminal.LOCS, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.ALLOC3, terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.FLOAT_T });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OPENBRKT });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EXPRESSION, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.CLOSEBRKT });
+						lp.Add(new simbolo { nonterminal = NonTerminal.ALLOC3, terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.STRING_T });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OPENBRKT });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EXPRESSION, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.CLOSEBRKT });
+						lp.Add(new simbolo { nonterminal = NonTerminal.ALLOC3, terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						break;
+					// ALLOC3 -> [ EXPRESSION ] ALLOC3 | e
+					case NonTerminal.ALLOC3:
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OPENBRKT });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EXPRESSION, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.CLOSEBRKT });
+						lp.Add(new simbolo { nonterminal = NonTerminal.ALLOC3, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						break;
-					case NonTerminal.BOOL:
-						lp.Add(new simbolo { nonterminal = NonTerminal.JOIN, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.BOOL2, terminal = Token.Terminals.EMPTY });
-						llp.Add(lp);
-						break;
-					case NonTerminal.BOOL2:
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OR });
-						lp.Add(new simbolo { nonterminal = NonTerminal.BOOL, terminal = Token.Terminals.EMPTY });
-						llp.Add(lp);
+					// EXPRESSION -> NUMEXPRESSION EXP2
+					case NonTerminal.EXPRESSION:
 						lp = new List<simbolo>();
 						lp.Clear();
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.NUMEXPRESSION, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EXP2, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						break;
-					case NonTerminal.JOIN:
-						lp.Add(new simbolo { nonterminal = NonTerminal.EQUALITY, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.JOIN2, terminal = Token.Terminals.EMPTY });
-						llp.Add(lp);
-						break;
-					case NonTerminal.JOIN2:
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.AND });
-						lp.Add(new simbolo { nonterminal = NonTerminal.JOIN, terminal = Token.Terminals.EMPTY });
-						llp.Add(lp);
-						lp = new List<simbolo>();
-						lp.Clear();
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.EMPTY });
-						llp.Add(lp);
-						break;
-					case NonTerminal.EQUALITY:
-						lp.Add(new simbolo { nonterminal = NonTerminal.REL, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EQUALITY2, terminal = Token.Terminals.EMPTY });
-						llp.Add(lp);
-						break;
+					// EXP2 -> < NUMEXPRESSION | > NUMEXPRESSION | <= NUMEXPRESSION | >= NUMEXPRESSION | == NUMEXPRESSION | ! = NUMEXPRESSION | e
 					case NonTerminal.EQUALITY2:
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.EQ });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EQUALITY, terminal = Token.Terminals.EMPTY });
-						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.NE });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EQUALITY, terminal = Token.Terminals.EMPTY });
-						llp.Add(lp);
-						lp = new List<simbolo>();
-						lp.Clear();
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.EMPTY });
-						llp.Add(lp);
-						break;
-					case NonTerminal.REL:
-						lp.Add(new simbolo { nonterminal = NonTerminal.EXPR, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.REL2, terminal = Token.Terminals.EMPTY });
-						llp.Add(lp);
-						break;
-					case NonTerminal.REL2:
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.LT });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EXPR, terminal = Token.Terminals.EMPTY });
-						llp.Add(lp);
-						lp = new List<simbolo>();
-						lp.Clear();
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.LE });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EXPR, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.NUMEXPRESSION, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.GT });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EXPR, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.NUMEXPRESSION, terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.LE });
+						lp.Add(new simbolo { nonterminal = NonTerminal.NUMEXPRESSION, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.GE });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EXPR, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.NUMEXPRESSION, terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.EQ });
+						lp.Add(new simbolo { nonterminal = NonTerminal.NUMEXPRESSION, terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.NE });
+						lp.Add(new simbolo { nonterminal = NonTerminal.NUMEXPRESSION, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						break;
-					case NonTerminal.EXPR:
+					// NUMEXPRESSION -> TERM NUM2
+					case NonTerminal.NUMEXPRESSION:
+						lp = new List<simbolo>();
+						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.TERM, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EXPRS, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.NUM2, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						break;
-					case NonTerminal.EXPRS:
+					// NUM2 -> + TERM NUM2| - TERM NUM2| e
+					case NonTerminal.NUM2:
+						lp = new List<simbolo>();
+						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.ADD });
 						lp.Add(new simbolo { nonterminal = NonTerminal.TERM, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EXPR, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.NUM2, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.MINUS });
 						lp.Add(new simbolo { nonterminal = NonTerminal.TERM, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EXPR, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.NUM2, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						break;
+					// TERM -> UNARYEXPR TERM2
 					case NonTerminal.TERM:
-						lp.Add(new simbolo { nonterminal = NonTerminal.UNARY, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.TERMS, terminal = Token.Terminals.EMPTY });
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.UNARYEXPR, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.TERM2, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						break;
-					case NonTerminal.TERMS:
+					// TERM2 -> ∗ UNARYEXPR TERM2| \ UNARYEXPR TERM2 | % UNARYEXPR TERM2 | e
+					case NonTerminal.TERM2:
+						lp = new List<simbolo>();
+						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.MULTIPLY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.UNARY, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.TERMS, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.UNARYEXPR, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.TERM2, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.DIVIDE });
-						lp.Add(new simbolo { nonterminal = NonTerminal.UNARY, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.TERMS, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.UNARYEXPR, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.TERM2, terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.MODULUS });
+						lp.Add(new simbolo { nonterminal = NonTerminal.UNARYEXPR, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.TERM2, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						break;
-					case NonTerminal.UNARY:
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.NOT });
-						lp.Add(new simbolo { nonterminal = NonTerminal.UNARY, terminal = Token.Terminals.EMPTY });
+					// UNARYEXPR -> + FACTOR | - FACTOR | FACTOR
+					case NonTerminal.UNARYEXPR:
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.ADD });
+						lp.Add(new simbolo { nonterminal = NonTerminal.FACTOR, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.MINUS });
-						lp.Add(new simbolo { nonterminal = NonTerminal.UNARY, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.FACTOR, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.FACTOR, terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						break;
-					case NonTerminal.FACTOR:
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OPENPARENT });
-						lp.Add(new simbolo { nonterminal = NonTerminal.BOOL, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.CLOSEPARENT });
-						llp.Add(lp);
-						lp = new List<simbolo>();
-						lp.Clear();
-						lp.Add(new simbolo { nonterminal = NonTerminal.LOC, terminal = Token.Terminals.EMPTY });
-						llp.Add(lp);
+					// FACTOR -> int_constant | float_constant | string_constant | null | LVALUE |( EXPRESSION )
+					case NonTerminal.TERMS:
 						lp = new List<simbolo>();
 						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.INT });
@@ -399,14 +474,31 @@ namespace FormaisECompiladores
 						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.TRUE });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.STR });
 						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.FALSE });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.NULL });
+						llp.Add(lp);
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.LVALUE, terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OPENPARENT });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EXPRESSION, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.CLOSEPARENT });
 						llp.Add(lp);
 						break;
-
+					// LVALUE -> ident ALLOC3
+					case NonTerminal.UNARY:
+						lp = new List<simbolo>();
+						lp.Clear();
+						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.IDENT });
+						lp.Add(new simbolo { nonterminal = NonTerminal.ALLOC3, terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						break;
 					default:
 						break;
 				}

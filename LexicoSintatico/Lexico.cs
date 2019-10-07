@@ -29,6 +29,7 @@ namespace FormaisECompiladores
 			NULL,
 			LOOP, // for, break
 			ITE, // if else
+			NEW, // new
 			ASSERT, // =
 			COMPARISON, // <= >= != ...
 			ARITMETHIC, // + - * / 
@@ -47,7 +48,7 @@ namespace FormaisECompiladores
 			INTEGER_T, FLOAT_T, STRING_T, NULL, // tipos: int, float, string, null
 			PRINT, RETURN, READ, // print, return, read
 			IF, ELSE, FOR, BREAK,
-			ASSERT, // =
+			NEW, ASSERT, // =
 			LT, LE, EQ, GT, GE, NE, // < <= == > >= <>
 			ADD, MINUS, MULTIPLY, DIVIDE, MODULUS, // + - * / %
 			SEPARATOR, // ;
@@ -95,6 +96,7 @@ namespace FormaisECompiladores
 			TokenCorrelation.Add("else", Terminals.ELSE);
 			TokenCorrelation.Add("for", Terminals.FOR);
 			TokenCorrelation.Add("break", Terminals.BREAK);
+			TokenCorrelation.Add("new", Terminals.NEW);
 			TokenCorrelation.Add("=", Terminals.ASSERT);
 			TokenCorrelation.Add("<", Terminals.LT);
 			TokenCorrelation.Add("<=", Terminals.LE);
@@ -124,6 +126,7 @@ namespace FormaisECompiladores
 			AttrCorrelation.Add(Terminals.ELSE, Attributes.ITE);
 			AttrCorrelation.Add(Terminals.FOR, Attributes.LOOP);
 			AttrCorrelation.Add(Terminals.BREAK, Attributes.LOOP);
+			AttrCorrelation.Add(Terminals.NEW, Attributes.NEW);
 			AttrCorrelation.Add(Terminals.ASSERT, Attributes.ASSERT);
 			AttrCorrelation.Add(Terminals.LT, Attributes.COMPARISON);
 			AttrCorrelation.Add(Terminals.LE, Attributes.COMPARISON);
