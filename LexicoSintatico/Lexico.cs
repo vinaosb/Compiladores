@@ -1,5 +1,5 @@
 ﻿// ################################################
-// Uiversidade Federal de Santa Catarina
+// Universidade Federal de Santa Catarina
 // INE5426 - Construção de Compiladores
 // Trabalho 1 - 2019/2
 // Alunos:
