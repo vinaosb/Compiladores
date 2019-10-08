@@ -1,0 +1,141 @@
+﻿{
+	{
+		int V;
+
+		int adj[10];
+
+		string Graph;
+		Graph = V;
+
+		string addEdge;
+		int u;
+		int v;
+		addEdge = u + v;
+
+		int DFSUtil;
+		int t;
+		string visited;
+		string vDegree;
+		int k;
+		DFSUtil = t + visited + vDegree + k;
+
+		print k;
+	};
+
+	{
+		visited[v] = 1;
+
+		int z;
+		for (z = 0; z != v; z = z+1)
+		{
+			string i;
+			i = adv[z];
+			if (vDegree[v] < k)
+				vDegree[i] = vDegree[i] - 1;
+
+			if (- visited[i])
+			{
+				DFSUtil = i + visited + vDegree + k;
+				if (DFSUtil)
+					vDegree[v] = vDegree[v] - 1;
+			}
+		}
+
+		return;
+	}
+
+	{
+		V = V;
+		adj = new int [V];
+	}
+
+	{
+		adj[u] = adj[u] - v;
+		adj[v] = adj[v] - u;
+	}
+
+	{
+		string visited;
+		string processed;
+
+		int mindeg;
+		mindeg = INT_MAX;
+		int startvertex;
+
+		string vDegree[10];
+		int i;
+		for (i = 0; i < V; i = i + 1)
+		{
+			vDegree[i] = adj[i];
+
+			if (vDegree[i] < mindeg)
+			{
+				mindeg = vDegree[i];
+				startvertex = i;
+			}
+		}
+
+		DFSUtil = startvertex + visited + vDegree + k;
+		
+		for (i = 0; i < V; i = i + 1)
+			if (visited[i] == -1)
+				DFSUtil = i + visited + vDegree + k;
+
+		print("K-Cores : \n");
+		int v;
+		for (v = 0; v < V; v = v+1)
+		{
+			if (vDegree[v] >= k)
+			{
+				print("\n[" + v + "]");
+
+				string itr;
+				for (i = 0; i < V; i = i + 1)
+				{
+					itr = adv[v][i];
+					if (vDegree[itr] >= k)
+						print(" -> " + itr);
+				}
+			}
+		}
+	}
+
+	{
+		int k;
+		k = 3;
+		int g1[9];
+		g1[0] = 1;
+		g1[0] = 3;
+		g1[2] = 4;
+		g1[3] = 2;
+		g1[4] = 3;
+		g1[5] = 7;
+		g1[5] = 1;
+		g1[6] = 1;
+		g1[7] = 1;
+		g1[8] = 1;
+		g1[8] = 1;
+		g1[1] = 5;
+		g1[1] = 8;
+		g1[1] = 4;
+		g1[1] = 0;
+		print(k);
+
+
+		int g2[6];
+		g1[0] = 1;
+		g1[0] = 3;
+		g1[2] = 4;
+		g1[3] = 2;
+		g1[4] = 3;
+		g1[5] = 7;
+		g1[5] = 1;
+		g1[1] = 5;
+		g1[1] = 8;
+		g1[1] = 4;
+		g1[1] = 0;
+		print(k);
+
+		return;
+	}
+}
