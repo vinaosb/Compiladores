@@ -58,6 +58,7 @@ namespace FormaisECompiladores
 					}
 
 					sr.Flush();
+					sr.Close();
 					break;
 			}
 
