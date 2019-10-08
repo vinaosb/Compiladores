@@ -143,12 +143,10 @@ namespace FormaisECompiladores
 						lp = new List<simbolo>();
 						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.IFSTAT, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.SEPARATOR });
 						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
 						lp.Add(new simbolo { nonterminal = NonTerminal.FORSTAT, terminal = Token.Terminals.EMPTY });
-						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.SEPARATOR });
 						llp.Add(lp);
 						lp = new List<simbolo>();
 						lp.Clear();
@@ -265,7 +263,7 @@ namespace FormaisECompiladores
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OPENPARENT });
 						lp.Add(new simbolo { nonterminal = NonTerminal.ATRIBSTAT, terminal = Token.Terminals.EMPTY });
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.SEPARATOR });
-						lp.Add(new simbolo { nonterminal = NonTerminal.NUMEXPRESSION, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EXPRESSION, terminal = Token.Terminals.EMPTY });
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.SEPARATOR });
 						lp.Add(new simbolo { nonterminal = NonTerminal.ATRIBSTAT, terminal = Token.Terminals.EMPTY });
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.CLOSEPARENT });
@@ -538,7 +536,7 @@ namespace FormaisECompiladores
 						{
 							List<simbolo> lpEpson = new List<simbolo>();
 							lpEpson.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.EMPTY });
-							ReferenceTable.Add(new simbolo { nonterminal = nt, terminal = t }, lpEpson);
+							ReferenceTable.TryAdd(new simbolo { nonterminal = nt, terminal = t }, lpEpson);
 						}
 					}
 
