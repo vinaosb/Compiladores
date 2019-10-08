@@ -40,21 +40,25 @@ namespace FormaisECompiladores
 					sr.AutoFlush = true;
 					Console.SetOut(sr);
 					Console.OutputEncoding = System.Text.Encoding.UTF8;
+					sr.WriteLine("Analise Lexica\n\n");
+					foreach (var l in lt)
+					{
+						sr.WriteLine("<{0},{1}>", l.a, l.s);
+					}
 					break;
 				default:
 					Console.Out.Write("Gerando arquivo AnaliseLexica.txt\n");
 					sr = new StreamWriter(@"AnaliseLexica.txt");
+					sr.WriteLine("Analise Lexica\n\n");
+					foreach (var l in lt)
+					{
+						sr.WriteLine("<{0},{1}>", l.a, l.s);
+					}
+
+					sr.Flush();
 					break;
 			}
 
-			sr.WriteLine("Analise Lexica\n\n");
-			foreach (var l in lt)
-			{
-				sr.WriteLine("<{0},{1}>", l.a, l.s);
-			}
-
-			sr.Flush();
-			sr.Close();
 		}
 
 		private static void PrintSintatico(Sintatico s, List<Token.Tok> lt, ExitMode mode)
@@ -69,16 +73,17 @@ namespace FormaisECompiladores
 					Console.SetOut(sr);
 					Console.OutputEncoding = System.Text.Encoding.UTF8;
 
+					s.WriteOutput(lt, sr);
 					break;
 				default:
 					Console.Out.Write("Escrevendo AnaliseSintatica.txt\n\n");
 					sr = new StreamWriter(@"AnaliseSintatica.txt");
+					s.WriteOutput(lt, sr);
+					sr.Flush();
+					sr.Close();
 					break;
 			}
 
-			s.WriteOutput(lt, sr);
-			sr.Flush();
-			sr.Close();
 		}
 
 		static void Main(string[] args)
@@ -149,7 +154,7 @@ namespace FormaisECompiladores
 					break;
 			}
 
-
+			Console.Out.WriteLine("\n\n###Fim de processo###");
 			Console.ReadKey();
 
 		}
