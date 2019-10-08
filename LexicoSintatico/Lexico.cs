@@ -162,7 +162,7 @@ namespace FormaisECompiladores
 					{
 						// Add Each Line to full_text variable
 						string line = sr.ReadLine();
-						uniline_text += line.Trim();
+						uniline_text += (line).Replace("\t", " ");
 						full_text += line;
 						// Also, skip to the next line
 						full_text += "\n";

@@ -1,10 +1,15 @@
 {
 	int integeable;
-	int naoehstring = 1;
-	double doubleable = 2.0;
-	double issoehfloat = 5.0;
-	float floatinho = 22.442e2;
-	int stringoloide = 171;
+	int naoehstring;
+	float doubleable;
+	float issoehfloat;
+	float floatinho;
+	int stringoloide;
+	naoehstring = 1;
+	doubleable = 2.0;
+	issoehfloat = 5.0;
+	floatinho = 22.442e2;
+	stringoloide = 171;
 	print "int é muito legal, double this print";
 	naoehstring = naoehstring + naoehstring;
 	doubleable = doubleable + 2.0;
@@ -37,9 +42,11 @@
 	y = 2;
 	z = 0;
 	x = (y*y + z*x)*y;
-	double testeparenteses = ((((((((1.0))))))));
-	int b = 2;
-	int mod = 10;
+	float testeparenteses = ((((((((1.0))))))));
+	int b;
+	int mod;
+	mod = 10;
+	b = 2;
 	if (b % 2 == 1){    
 		x = (x + y) % mod;
 	}
@@ -75,7 +82,8 @@
 		print "algo deu errado";
 		return 0;
 	}
-	int zero = 100 - 99;
+	int zero;
+	zero = 100 - 99;
 	zero = zero - zero;
 	zero = (zero) - (zero) * zero*zero * (((zero)));
 	zero = zero / 1;
@@ -83,11 +91,14 @@
 	print "double integer float string";
 	print 	"zero x y z [ ] ";
 	print "return assert == eu, ; ; ; ; ; ; ( y )";
-	int number___ed = 1000;
+	int number___ed;
+	number___ed = 1000;
 	number___ed = 0;
 	number___ed = (1/1) * number___ed + zero;
-	int hexa = 6;
-	int penta =5;
+	int hexa;
+	int penta;
+	hexa = 6;
+	penta=5;
 	penta = penta + 0 + hexa - 6;
 	if(penta == 5){
 		print "funciona";
@@ -103,8 +114,10 @@
 		}
 	}
 	print "final do código";
-	int byebyeCode = 0;
-	int camelCaseCrazyName = 10;
+	int camelCaseCrazyName;
+	int byebyeCode;
+	camelCaseCrazyName = 10;
+	byebyeCode = 0;
 	return byebyeCode;
 }
 	
