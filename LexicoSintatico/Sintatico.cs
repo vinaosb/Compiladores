@@ -265,7 +265,7 @@ namespace FormaisECompiladores
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.OPENPARENT });
 						lp.Add(new simbolo { nonterminal = NonTerminal.ATRIBSTAT, terminal = Token.Terminals.EMPTY });
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.SEPARATOR });
-						lp.Add(new simbolo { nonterminal = NonTerminal.NUMEXPRESSION, terminal = Token.Terminals.EMPTY });
+						lp.Add(new simbolo { nonterminal = NonTerminal.EXPRESSION, terminal = Token.Terminals.EMPTY });
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.SEPARATOR });
 						lp.Add(new simbolo { nonterminal = NonTerminal.ATRIBSTAT, terminal = Token.Terminals.EMPTY });
 						lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.CLOSEPARENT });

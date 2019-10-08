@@ -206,6 +206,7 @@ namespace FormaisECompiladores
 			{
 				Console.WriteLine("The file could not be read:");
 				Console.WriteLine(e.Message);
+				return null;
 			}
 
 			return LT;

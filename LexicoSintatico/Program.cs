@@ -114,14 +114,18 @@ namespace FormaisECompiladores
 			}
 
 			string name;
-			string path = @"";
-			Console.Out.WriteLine("Escreva o nome do arquivo");
-			Console.Out.WriteLine("Esse arquivo deve estar na pasta do executável");
-			name = Console.ReadLine();
-			path += name;
+			List<Token.Tok> lt = null;
+			do
+			{
+				string path = @"";
+				Console.Out.WriteLine("Escreva o nome do arquivo de leitura");
+				Console.Out.WriteLine("Esse arquivo deve estar na pasta do executável");
+				name = Console.ReadLine();
+				path += name;
 
-			Token t = new Token(path);
-			List<Token.Tok> lt = t.ReadFile();
+				Token t = new Token(path);
+				lt = t.ReadFile();
+			} while (lt == null);
 			Sintatico s = new Sintatico();
 
 			switch (outputMode)
