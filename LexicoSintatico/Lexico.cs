@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace FormaisECompiladores
 {
@@ -184,9 +185,14 @@ namespace FormaisECompiladores
 					string[] register = uniline_text.Split(charSeparator, StringSplitOptions.RemoveEmptyEntries);
 					uniline_text = string.Join(" ", uniline_text.Split(charSeparator, StringSplitOptions.RemoveEmptyEntries)).Trim();
 					token_string_text = SearchStrings(uniline_text);
+					String token_string_text2 = SearchStrings(full_text);
 
-
-					LT.AddRange(Tokenize(token_string_text));
+					var result = Regex.Split(token_string_text2, "\r\n|\r|\n");
+					int lineCount = 0;
+					foreach (var r in result)
+					{
+						LT.AddRange(Tokenize(r, lineCount++));
+					}
 
 				}
 			}
@@ -313,15 +319,16 @@ namespace FormaisECompiladores
 			return line;
 		}
 
-		public List<Tok> Tokenize(String s)
+		public List<Tok> Tokenize(String s, int line)
 		{
 			List<Tok> tokens = new List<Tok>();
-			char[] charSeparator = new char[] { ' ' };
+			char[] charSeparator = new char[] { ' ', '\n', '\t' };
 			string[] result;
 
 			s = AddSpace(s);
 
 			result = s.Split(charSeparator, StringSplitOptions.RemoveEmptyEntries);
+
 
 			foreach (var r in result)
 			{
@@ -341,6 +348,10 @@ namespace FormaisECompiladores
 					temp.s = real_r;
 					temp.t = GetTerminal(real_r);
 					temp.a = AttrCorrelation.GetValueOrDefault(temp.t);
+					if (temp.t == Terminals.ERROR)
+					{
+						temp.s = "Linha " + line.ToString() + ": " + "\'" + temp.s + "\'";
+					}
 					tokens.Add(temp);
 				}
 			}
@@ -360,7 +371,6 @@ namespace FormaisECompiladores
 				return TokenCorrelation.GetValueOrDefault(s);
 			if (Char.IsLetter(s[0]))
 				return Terminals.IDENT;
-			Console.WriteLine("{0} é invalido", s);
 			return Terminals.ERROR;
 		}
 	}
