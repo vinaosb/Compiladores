@@ -30,7 +30,8 @@
 		if( (2+2) == 4){
 			print stringoloide;
 		}
-		for(int i = 0; i < 100; i = i+1){
+		int i;
+		for(i = 0; i < 100; i = i+1){
 			print "looping";
 			print i;
 		}
@@ -42,7 +43,8 @@
 	y = 2;
 	z = 0;
 	x = (y*y + z*x)*y;
-	float testeparenteses = ((((((((1.0))))))));
+	float testeparenteses;
+	testeparenteses = ((((((((1.0))))))));
 	int b;
 	int mod;
 	mod = 10;
@@ -57,7 +59,7 @@
 	naoehstring = naoehstring/1;
 	naoehstring = ((naoehstring));
 	if(naoehstring){
-		return 0;
+		return;
 	}else{
 		print "if elsinho, else, ifinho";
 	}
@@ -80,7 +82,7 @@
 		}
 	}else{
 		print "algo deu errado";
-		return 0;
+		return;
 	}
 	int zero;
 	zero = 100 - 99;
@@ -104,7 +106,7 @@
 		print "funciona";
 	}
 	if(hexa == 6){
-		print "ok"
+		print "ok";
 	}
 	if(hexa >= penta){
 		if(hexa > penta){
@@ -118,6 +120,6 @@
 	int byebyeCode;
 	camelCaseCrazyName = 10;
 	byebyeCode = 0;
-	return byebyeCode;
+	return;
+	}
 }
-	
