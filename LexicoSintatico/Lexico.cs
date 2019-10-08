@@ -3,9 +3,9 @@
 // INE5426 - Construção de Compiladores
 // Trabalho 1 - 2019/2
 // Alunos:
-//		- Bruno George Marques           (14100825)
-//      - Marcelo José Dias              (15205398)
-//      - Renan Pinho Assi               (12200656)
+//		- Bruno George de Moraes (14100825)
+//      - Renan Pinho Assi (12200656)
+//      - Marcelo José Dias (15205398)
 //      - Vinícius Schwinden Berkenbrock (16100751)
 //#################################################
 using System;
@@ -173,33 +173,9 @@ namespace FormaisECompiladores
 					uniline_text = string.Join(" ", uniline_text.Split(charSeparator, StringSplitOptions.RemoveEmptyEntries)).Trim();
 					token_string_text = SearchStrings(uniline_text);
 
-					// Print Original Code
-					Console.WriteLine("Original Code:\n");
-					Console.WriteLine(full_text);
-					Console.WriteLine("\n\n\n\n");
-
-					Console.WriteLine("Minified Code:\n");
-					Console.WriteLine(uniline_text);
-					Console.WriteLine("\n\n\n\n");
-
-
-					Console.WriteLine("String Hunted Code:\n");
-					Console.WriteLine(token_string_text);
-					Console.WriteLine("\n\n\n\n");
-
-
-					/* 
-                     * Passing Just one line with everything 
-                     * If break lines are important we can mark it
-                     */
-
-					//  // Read the stream to a string, and write the string to the console.
-					//  while (sr.Peek() >= 0) { 
-					//      String line = sr.ReadLine();
-					//      Console.WriteLine(line);
 
 					LT.AddRange(Tokenize(token_string_text));
-					//  }
+
 				}
 			}
 			catch (Exception e)

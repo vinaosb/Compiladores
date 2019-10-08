@@ -3,7 +3,7 @@
 // INE5426 - Construção de Compiladores
 // Trabalho 1 - 2019/2
 // Alunos:
-//		- Bruno George Marques (14100825)
+//		- Bruno George de Moraes (14100825)
 //      - Renan Pinho Assi (12200656)
 //      - Marcelo José Dias (15205398)
 //      - Vinícius Schwinden Berkenbrock (16100751)

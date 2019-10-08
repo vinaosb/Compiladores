@@ -3,7 +3,7 @@
 // INE5426 - Construção de Compiladores
 // Trabalho 1 - 2019/2
 // Alunos:
-//		- Bruno George Marques (14100825)
+//		- Bruno George de Moraes (14100825)
 //      - Renan Pinho Assi (12200656)
 //      - Marcelo José Dias (15205398)
 //      - Vinícius Schwinden Berkenbrock (16100751)
@@ -81,12 +81,6 @@ namespace FormaisECompiladores
 			foreach (NonTerminal nt in Enum.GetValues(typeof(NonTerminal)))
 			{
 				llp = new List<List<Simbolo>>();
-				/*
-				lp = new List<simbolo>();
-				lp.Clear();
-				lp.Add(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.EMPTY });
-				llp.Add(lp);
-				*/
 				switch (nt)
 				{
 					// PROGRAM -> STATEMENT | &
@@ -559,7 +553,7 @@ namespace FormaisECompiladores
 						prod += pr.Nonterminal.ToString() + " ";
 				}
 				prod = prod.Replace("EMPTY", "ɛ");
-				sr.WriteLine("{0},{1}->{2}", sy.Key.Nonterminal, sy.Key.Terminal, prod);
+				//sr.WriteLine("{0},{1}->{2}", sy.Key.Nonterminal, sy.Key.Terminal, prod);
 			}
 
 			if (PredictiveParser(lt, sr))
@@ -598,43 +592,6 @@ namespace FormaisECompiladores
 
 			//lt.Add(Token.Terminals.BASIC);//pra testar so.
 			return lt;
-		}
-		public void CalculaFirst()
-		{
-			_ = new List<NonTerminal>();
-			foreach (var t in Producoes)
-			{
-				List<Token.Terminals> terminais = new List<Token.Terminals>();
-				ProcuraFirst(t.Key, terminais);
-				first.Add(t.Key, terminais);
-			}
-		}
-
-		public void ProcuraFirst(NonTerminal naoTerminalAtual, List<Token.Terminals> terminais)
-		{
-			List<List<Simbolo>> p = Producoes[naoTerminalAtual];
-			foreach (var t in p)
-			{
-				int i = 0;
-				foreach (var h in t)
-				{
-					if (i == 0)
-					{
-						if (h.Nonterminal != NonTerminal.EMPTY)
-						{
-							if (h.Terminal == Token.Terminals.EMPTY)
-							{
-								ProcuraFirst(h.Nonterminal, terminais);
-							}
-						}
-						else
-						{
-							terminais.Add(h.Terminal);
-						}
-					}
-					i++;
-				}
-			}
 		}
 
 		private HashSet<Token.Terminals> First(NonTerminal nt)
