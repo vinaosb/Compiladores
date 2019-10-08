@@ -29,7 +29,7 @@ namespace FormaisECompiladores
 			Console
 		};
 
-		private static void PrintLexico(List<Token.Tok> lt, ExitMode mode)
+		private static void PrintLexico(Token t, ExitMode mode)
 		{
 			StreamWriter sr;
 			switch (mode)
@@ -42,22 +42,18 @@ namespace FormaisECompiladores
 					};
 					Console.SetOut(sr);
 					Console.OutputEncoding = System.Text.Encoding.UTF8;
-					sr.WriteLine("Analise Lexica\n\n");
-					foreach (var l in lt)
-					{
-						sr.WriteLine("<{0},{1}>", l.a, l.s);
-					}
+
+					t.PrintToken(sr);
 					break;
 				default:
 					Console.Out.Write("Gerando arquivo AnaliseLexica.txt\n");
-					sr = new StreamWriter(@"AnaliseLexica.txt");
-					sr.WriteLine("Analise Lexica\n\n");
-					foreach (var l in lt)
+					sr = new StreamWriter(@"AnaliseLexica.txt")
 					{
-						sr.WriteLine("<{0},{1}>", l.a, l.s);
-					}
+						AutoFlush = true
+					};
 
-					sr.Flush();
+					t.PrintToken(sr);
+
 					sr.Close();
 					break;
 			}
@@ -125,6 +121,7 @@ namespace FormaisECompiladores
 
 			string name;
 			List<Token.Tok> lt;
+			Token t;
 			do
 			{
 				string path = @"";
@@ -133,7 +130,7 @@ namespace FormaisECompiladores
 				name = Console.ReadLine();
 				path += name;
 
-				Token t = new Token(path);
+				t = new Token(path);
 				lt = t.ReadFile();
 			} while (lt == null);
 			Sintatico s = new Sintatico();
@@ -141,22 +138,25 @@ namespace FormaisECompiladores
 			switch (outputMode)
 			{
 				case Output.Lex:
-					PrintLexico(lt, exitMode);
+					PrintLexico(t, exitMode);
 					break;
 				case Output.Sin:
 					PrintSintatico(s, lt, exitMode);
 					break;
 				default:
-					PrintLexico(lt, exitMode);
+					PrintLexico(t, exitMode);
 					Console.Out.Close();
 					StreamWriter sw = new StreamWriter(Console.OpenStandardOutput())
 					{
 						AutoFlush = true
 					};
-					Console.SetOut(sw);
-					Console.OutputEncoding = System.Text.Encoding.UTF8;
-					Console.Out.WriteLine("\n\nPressione uma tecla para continuar\n\n");
-					Console.ReadKey();
+					if (exitMode.Equals(ExitMode.Console))
+					{
+						Console.SetOut(sw);
+						Console.OutputEncoding = System.Text.Encoding.UTF8;
+						Console.Out.WriteLine("\n\nPressione uma tecla para continuar para o Sintatico\n\n");
+						Console.ReadKey();
+					}
 					PrintSintatico(s, lt, exitMode);
 					break;
 			}
