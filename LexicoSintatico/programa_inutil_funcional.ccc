@@ -1,0 +1,110 @@
+{
+	int integeable;
+	int naoehstring = 1;
+	double doubleable = 2.0;
+	double issoehfloat = 5.0;
+	float floatinho = 22.442e2;
+	int stringoloide = 171;
+	print "int é muito legal, double this print";
+	naoehstring = naoehstring + naoehstring;
+	doubleable = doubleable + 2.0;
+	for(integeable = 0; integeable < naoehstring; integeable++){
+		if(integeable < naoehstring - 1){
+			print "isso só testa o parser";
+		}else{
+			break;
+		}		
+	}
+	naoehstring = ((naoehstring/2)*2)+2-2;
+	naoehstring = 2%2;
+	if(naoehstring > 2){
+		print "ta errado isso...";
+	}
+	if(stringoloide){
+		stringoloide = 3;
+		if( (2+2) == 4){
+			print stringoloide;
+		}
+		for(int i = 0; i < 100; i++){
+			print "looping";
+			print i;
+		}
+	}
+	int x;
+	int y;
+	int z;
+	x = 1500;
+	y = 2;
+	z = 0;
+	x = (y*y + z*x)*y;
+	double testeparenteses = ((((((((1.0))))))));
+	int b = 2;
+	int mod = 10;
+	if (b % 2 == 1){    
+		x = (x + y) % mod;
+	}
+	y = (y * 2) % mod;
+	b = b/2;
+	naoehstring = x+y+z+x+y+z+naoehstring;
+	naoehstring = 0;
+	naoehstring = naoehstring/1;
+	naoehstring = ((naoehstring));
+	if(naoehstring){
+		return 0;
+	}else{
+		print "if elsinho, else, ifinho";
+	}
+	for(x = 0; x < 10; x++){
+		for(y = 0; y < 10; y++){
+			for(z = 0; z < 10; z++){
+			print x;
+			print y;
+			print z;
+		}
+		naoehstring = x+y+z;
+	}
+	print "ainda funciona";
+	print "debug one";
+	issoehfloat = issoehfloat + 22.442e2;
+	if(issoehfloat){
+		print "ok";
+		if( ( ( ( 1 == 1 ) ) ) ){
+			print "one";
+		}
+	}else{
+		print "algo deu errado";
+		return 0;
+	}
+	int zero = 100 - 99;
+	zero = zero - zero;
+	zero = (zero) - (zero) * zero*zero * (((zero)));
+	zero = zero / 1;
+	zero = 0;
+	print "double integer float string";
+	print 	"zero x y z [ ] ";
+	print "return assert == eu, ; ; ; ; ; ; ( y )";
+	int number___ed = 1000;
+	number___ed = 0;
+	number___ed = (1/1) * number___ed + zero;
+	int hexa = 6;
+	int penta =5;
+	penta = penta + 0 + hexa - 6;
+	if(penta == 5){
+		print "funciona";
+	}
+	if(hexa == 6){
+		print "ok"
+	}
+	if(hexa >= penta){
+		if(hexa > penta){
+			if(hexa > 5){
+				print "É Hexa!!!";
+			}
+		}
+	}
+	print "final do código";
+	int byebyeCode = 0;
+	int camelCaseCrazyName = 10;
+	return byebyeCode;
+}
+	
