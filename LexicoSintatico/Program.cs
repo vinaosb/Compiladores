@@ -36,8 +36,10 @@ namespace FormaisECompiladores
 			{
 				case ExitMode.Console:
 					Console.Out.Write("\n\n######Analise Lexica######\n\n");
-					sr = new StreamWriter(Console.OpenStandardOutput());
-					sr.AutoFlush = true;
+					sr = new StreamWriter(Console.OpenStandardOutput())
+					{
+						AutoFlush = true
+					};
 					Console.SetOut(sr);
 					Console.OutputEncoding = System.Text.Encoding.UTF8;
 					sr.WriteLine("Analise Lexica\n\n");
@@ -68,8 +70,10 @@ namespace FormaisECompiladores
 			{
 				case ExitMode.Console:
 					Console.Out.Write("\n\n######Analise Sintatica######\n\n");
-					sr = new StreamWriter(Console.OpenStandardOutput());
-					sr.AutoFlush = true;
+					sr = new StreamWriter(Console.OpenStandardOutput())
+					{
+						AutoFlush = true
+					};
 					Console.SetOut(sr);
 					Console.OutputEncoding = System.Text.Encoding.UTF8;
 
@@ -86,7 +90,7 @@ namespace FormaisECompiladores
 
 		}
 
-		static void Main(string[] args)
+		static void Main()
 		{
 			Console.OutputEncoding = System.Text.Encoding.UTF8;
 
@@ -119,7 +123,7 @@ namespace FormaisECompiladores
 			}
 
 			string name;
-			List<Token.Tok> lt = null;
+			List<Token.Tok> lt;
 			do
 			{
 				string path = @"";
@@ -144,8 +148,10 @@ namespace FormaisECompiladores
 				default:
 					PrintLexico(lt, exitMode);
 					Console.Out.Close();
-					StreamWriter sw = new StreamWriter(Console.OpenStandardOutput());
-					sw.AutoFlush = true;
+					StreamWriter sw = new StreamWriter(Console.OpenStandardOutput())
+					{
+						AutoFlush = true
+					};
 					Console.SetOut(sw);
 					Console.OutputEncoding = System.Text.Encoding.UTF8;
 					Console.Out.WriteLine("\n\nPressione uma tecla para continuar\n\n");
@@ -156,6 +162,7 @@ namespace FormaisECompiladores
 
 			Console.Out.WriteLine("\n\n###Fim de processo###");
 			Console.ReadKey();
+			Console.Out.Close();
 
 		}
 	}

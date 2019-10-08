@@ -57,7 +57,7 @@ namespace FormaisECompiladores
 		};
 
 
-		public string path { get; set; }
+		public string Path { get; set; }
 		public Dictionary<string, Terminals> TokenCorrelation;
 		public Dictionary<Terminals, Attributes> AttrCorrelation;
 
@@ -75,14 +75,14 @@ namespace FormaisECompiladores
 
 		public Token(string Path)
 		{
-			path = Path;
+			this.Path = Path;
 			TokenCorrelation = new Dictionary<string, Terminals>();
 			AttrCorrelation = new Dictionary<Terminals, Attributes>();
 			mapString = new Dictionary<string, string>();
-			init();
+			Init();
 		}
 
-		public void init()
+		public void Init()
 		{
 			TokenCorrelation.Add("{", Terminals.OPENBRACE);
 			TokenCorrelation.Add("}", Terminals.CLOSEBRACE);
@@ -152,7 +152,7 @@ namespace FormaisECompiladores
 
 			try
 			{   // Open the text file using a stream reader.
-				using (StreamReader sr = new StreamReader(path))
+				using (StreamReader sr = new StreamReader(Path))
 				{
 					// Raw Text
 					String full_text = "";
@@ -171,7 +171,7 @@ namespace FormaisECompiladores
 					char[] charSeparator = new char[] { ' ' };
 					string[] register = uniline_text.Split(charSeparator, StringSplitOptions.RemoveEmptyEntries);
 					uniline_text = string.Join(" ", uniline_text.Split(charSeparator, StringSplitOptions.RemoveEmptyEntries)).Trim();
-					token_string_text = searchStrings(uniline_text);
+					token_string_text = SearchStrings(uniline_text);
 
 					// Print Original Code
 					Console.WriteLine("Original Code:\n");
@@ -212,7 +212,7 @@ namespace FormaisECompiladores
 			return LT;
 		}
 
-		private String searchStrings(String text)
+		private String SearchStrings(String text)
 		{
 			string result = String.Copy(text);
 			string substring = "";
@@ -250,7 +250,7 @@ namespace FormaisECompiladores
 		}
 
 
-		private String addSpace(String line)
+		private String AddSpace(String line)
 		{
 			foreach (char c in line)
 			{
@@ -288,7 +288,7 @@ namespace FormaisECompiladores
 			char[] charSeparator = new char[] { ' ' };
 			string[] result;
 
-			s = addSpace(s);
+			s = AddSpace(s);
 
 			result = s.Split(charSeparator, StringSplitOptions.RemoveEmptyEntries);
 
@@ -308,7 +308,7 @@ namespace FormaisECompiladores
 				{
 					Tok temp;
 					temp.s = real_r;
-					temp.t = getTerminal(real_r);
+					temp.t = GetTerminal(real_r);
 					temp.a = AttrCorrelation.GetValueOrDefault(temp.t);
 					tokens.Add(temp);
 				}
@@ -317,7 +317,7 @@ namespace FormaisECompiladores
 			return tokens;
 		}
 
-		public Terminals getTerminal(string s)
+		public Terminals GetTerminal(string s)
 		{
 			if (Char.IsNumber(s[0]))
 			{
