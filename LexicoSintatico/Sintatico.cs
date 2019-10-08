@@ -562,13 +562,13 @@ namespace FormaisECompiladores
 						prod += pr.nonterminal.ToString() + " ";
 				}
 				prod = prod.Replace("EMPTY", "ɛ");
-				Console.Out.WriteLine("{0},{1}->{2}", sy.Key.nonterminal, sy.Key.terminal, prod);
+				sr.WriteLine("{0},{1}->{2}", sy.Key.nonterminal, sy.Key.terminal, prod);
 			}
 
 			if (predictiveParser(lt, sr))
-				Console.Out.WriteLine("Entrada Aceita");
+				sr.WriteLine("Entrada Aceita");
 			else
-				Console.Out.WriteLine("Entrada Nao Aceita");
+				sr.WriteLine("Entrada Nao Aceita");
 		}
 
 		private List<Token.Terminals> getFirstFromProd(List<simbolo> lp)
@@ -777,10 +777,10 @@ namespace FormaisECompiladores
 			List<simbolo> newItems = new List<simbolo>();
 
 
-			Console.Out.WriteLine("");
-			Console.Out.WriteLine("Parser: (Pilha)");
-			Console.Out.WriteLine(String.Format("|{0,-70}|{1,-70}|", "Stack", "Matched"));
-			Console.Out.WriteLine(String.Format("|{0,70}|{0,70}|", "PROGRAM $"));
+			sr.WriteLine("");
+			sr.WriteLine("Parser: (Pilha)");
+			sr.WriteLine(String.Format("|{0,-150}|{1,-150}|", "Stack", "Matched"));
+			sr.WriteLine(String.Format("|{0,150}|{0,150}|", "PROGRAM $"));
 			toks = checkDollarSign(toks);
 			pilha.Push(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.DOLLAR });
 			pilha.Push(new simbolo { nonterminal = NonTerminal.PROGRAM, terminal = Token.Terminals.EMPTY });
@@ -850,7 +850,7 @@ namespace FormaisECompiladores
 					}
 					//Console.WriteLine(st + "  | " + output);
 
-					Console.Out.WriteLine(String.Format("|{0,70}|{1,70}|", st, output));
+					sr.WriteLine(String.Format("|{0,150}|{1,150}|", st, output));
 					if (!exit)
 						return false;
 				}

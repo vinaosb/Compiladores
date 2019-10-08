@@ -39,6 +39,7 @@ namespace FormaisECompiladores
 					sr = new StreamWriter(Console.OpenStandardOutput());
 					sr.AutoFlush = true;
 					Console.SetOut(sr);
+					Console.OutputEncoding = System.Text.Encoding.UTF8;
 					break;
 				default:
 					Console.Out.Write("Gerando arquivo AnaliseLexica.txt\n");
@@ -46,13 +47,14 @@ namespace FormaisECompiladores
 					break;
 			}
 
-			Console.Out.WriteLine("Analise Lexica\n\n");
+			sr.WriteLine("Analise Lexica\n\n");
 			foreach (var l in lt)
 			{
-				Console.Out.WriteLine("<{0},{1}>", l.a, l.s);
+				sr.WriteLine("<{0},{1}>", l.a, l.s);
 			}
 
 			sr.Flush();
+			sr.Close();
 		}
 
 		private static void PrintSintatico(Sintatico s, List<Token.Tok> lt, ExitMode mode)
@@ -65,7 +67,7 @@ namespace FormaisECompiladores
 					sr = new StreamWriter(Console.OpenStandardOutput());
 					sr.AutoFlush = true;
 					Console.SetOut(sr);
-					Console.OutputEncoding = System.Text.Encoding.Unicode;
+					Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 					break;
 				default:
@@ -76,23 +78,40 @@ namespace FormaisECompiladores
 
 			s.WriteOutput(lt, sr);
 			sr.Flush();
+			sr.Close();
 		}
 
 		static void Main(string[] args)
 		{
-			Console.OutputEncoding = System.Text.Encoding.Unicode;
+			Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 			Console.Out.WriteLine("Digite 0 para ver a Análise Léxica e Sintática");
 			Console.Out.WriteLine("Digite 1 para ver apenas a Análise Léxica");
 			Console.Out.WriteLine("Digite 2 para ver apenas a Análise Sintática");
 			Console.Out.WriteLine("Default = 0");
-			Output outputMode = (Output)(int)char.GetNumericValue(Console.ReadLine()[0]);
+			Output outputMode;
+			try
+			{
+				outputMode = (Output)(int)char.GetNumericValue(Console.ReadLine()[0]);
+			}
+			catch (Exception)
+			{
+				outputMode = 0;
+			}
 
 
 			Console.Out.WriteLine("Digite 0 para criar um arquivo de output");
 			Console.Out.WriteLine("Digite 1 para mostrar a saída no console");
 			Console.Out.WriteLine("Default = 0");
-			ExitMode exitMode = (ExitMode)(int)char.GetNumericValue(Console.ReadLine()[0]);
+			ExitMode exitMode;
+			try
+			{
+				exitMode = (ExitMode)(int)char.GetNumericValue(Console.ReadLine()[0]);
+			}
+			catch (Exception)
+			{
+				exitMode = 0;
+			}
 
 			string name;
 			string path = @"";
@@ -115,10 +134,11 @@ namespace FormaisECompiladores
 					break;
 				default:
 					PrintLexico(lt, exitMode);
+					Console.Out.Close();
 					StreamWriter sw = new StreamWriter(Console.OpenStandardOutput());
 					sw.AutoFlush = true;
 					Console.SetOut(sw);
-					Console.OutputEncoding = System.Text.Encoding.Unicode;
+					Console.OutputEncoding = System.Text.Encoding.UTF8;
 					Console.Out.WriteLine("\n\nPressione uma tecla para continuar\n\n");
 					Console.ReadKey();
 					PrintSintatico(s, lt, exitMode);
