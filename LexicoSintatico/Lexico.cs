@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace FormaisECompiladores
 {
@@ -187,7 +186,8 @@ namespace FormaisECompiladores
 					token_string_text = SearchStrings(uniline_text);
 					String token_string_text2 = SearchStrings(full_text);
 
-					var result = Regex.Split(token_string_text2, "\r\n|\r|\n");
+					char[] splitter = new char[] {'\n' };
+					var result = token_string_text2.Split(splitter);
 					int lineCount = 0;
 					foreach (var r in result)
 					{
@@ -328,11 +328,11 @@ namespace FormaisECompiladores
 			s = AddSpace(s);
 
 			result = s.Split(charSeparator, StringSplitOptions.RemoveEmptyEntries);
-			column = s.Split(charSeparator);
+			column = s.Split(charSeparator, StringSplitOptions.None);
 
 
 			foreach (var r in result)
-			{
+			{ 
 				columnCount = 0;
 				string real_r = r;
 				if (mapString.ContainsKey(r))
@@ -358,7 +358,7 @@ namespace FormaisECompiladores
 								break;
 							columnCount++;
 						}
-						temp.s = "Linha " + line.ToString() + " Coluna " + columnCount.ToString() + ": " + "\'" + temp.s + "\'";
+						temp.s = "Linha " + line.ToString() + " Simbolo " + columnCount.ToString() + ": " + "\'" + temp.s + "\'";
 					}
 					tokens.Add(temp);
 				}
