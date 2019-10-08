@@ -16,65 +16,118 @@ namespace FormaisECompiladores
 {
 	class Program
 	{
+		enum Output
+		{
+			LexSin,
+			Lex,
+			Sin
+		};
+
+		enum ExitMode
+		{
+			File,
+			Console
+		};
+
+		private static void PrintLexico(List<Token.Tok> lt, ExitMode mode)
+		{
+			StreamWriter sr;
+			switch (mode)
+			{
+				case ExitMode.Console:
+					Console.Out.Write("\n\n######Analise Lexica######\n\n");
+					sr = new StreamWriter(Console.OpenStandardOutput());
+					sr.AutoFlush = true;
+					Console.SetOut(sr);
+					break;
+				default:
+					Console.Out.Write("Gerando arquivo AnaliseLexica.txt\n");
+					sr = new StreamWriter(@"AnaliseLexica.txt");
+					break;
+			}
+
+			Console.Out.WriteLine("Analise Lexica\n\n");
+			foreach (var l in lt)
+			{
+				Console.Out.WriteLine("<{0},{1}>", l.a, l.s);
+			}
+
+			sr.Flush();
+		}
+
+		private static void PrintSintatico(Sintatico s, List<Token.Tok> lt, ExitMode mode)
+		{
+			StreamWriter sr;
+			switch (mode)
+			{
+				case ExitMode.Console:
+					Console.Out.Write("\n\n######Analise Sintatica######\n\n");
+					sr = new StreamWriter(Console.OpenStandardOutput());
+					sr.AutoFlush = true;
+					Console.SetOut(sr);
+					Console.OutputEncoding = System.Text.Encoding.Unicode;
+
+					break;
+				default:
+					Console.Out.Write("Escrevendo AnaliseSintatica.txt\n\n");
+					sr = new StreamWriter(@"AnaliseSintatica.txt");
+					break;
+			}
+
+			s.WriteOutput(lt, sr);
+			sr.Flush();
+		}
+
 		static void Main(string[] args)
 		{
 			Console.OutputEncoding = System.Text.Encoding.Unicode;
-			Console.WriteLine("===### Analise Sintatica ###===");
+
+			Console.Out.WriteLine("Digite 0 para ver a Análise Léxica e Sintática");
+			Console.Out.WriteLine("Digite 1 para ver apenas a Análise Léxica");
+			Console.Out.WriteLine("Digite 2 para ver apenas a Análise Sintática");
+			Console.Out.WriteLine("Default = 0");
+			Output outputMode = (Output)(int)char.GetNumericValue(Console.ReadLine()[0]);
+
+
+			Console.Out.WriteLine("Digite 0 para criar um arquivo de output");
+			Console.Out.WriteLine("Digite 1 para mostrar a saída no console");
+			Console.Out.WriteLine("Default = 0");
+			ExitMode exitMode = (ExitMode)(int)char.GetNumericValue(Console.ReadLine()[0]);
+
 			string name;
 			string path = @"";
-			Console.WriteLine("Escreva o nome do arquivo");
+			Console.Out.WriteLine("Escreva o nome do arquivo");
+			Console.Out.WriteLine("Esse arquivo deve estar na pasta do executável");
 			name = Console.ReadLine();
-
 			path += name;
 
 			Token t = new Token(path);
 			List<Token.Tok> lt = t.ReadFile();
-			Console.WriteLine("Analise Lexica");
-			foreach (var l in lt)
-			{
-			    Console.WriteLine("<{0},{1}>", l.a, l.s);
-			}
-			/*Sintatico s = new Sintatico();
-			// ##### PRINT PARSING TABLE ####
-			Console.WriteLine("");
-			Console.WriteLine("Parsing Table:");
-			Console.WriteLine("...");
-			Console.WriteLine("Output in (f)file or (c)console? Default = file");
+			Sintatico s = new Sintatico();
 
-			char output = Console.ReadLine()[0];
+			switch (outputMode)
+			{
+				case Output.Lex:
+					PrintLexico(lt, exitMode);
+					break;
+				case Output.Sin:
+					PrintSintatico(s, lt, exitMode);
+					break;
+				default:
+					PrintLexico(lt, exitMode);
+					StreamWriter sw = new StreamWriter(Console.OpenStandardOutput());
+					sw.AutoFlush = true;
+					Console.SetOut(sw);
+					Console.OutputEncoding = System.Text.Encoding.Unicode;
+					Console.Out.WriteLine("\n\nPressione uma tecla para continuar\n\n");
+					Console.ReadKey();
+					PrintSintatico(s, lt, exitMode);
+					break;
+			}
 
-			if (output == 'c')
-			{
-				string prod = "";
-				foreach (var sy in s.ReferenceTable)
-				{
-					prod = "";
-					foreach (var pr in sy.Value)
-					{
-						if (pr.nonterminal.Equals(Sintatico.NonTerminal.EMPTY))
-							prod += pr.terminal.ToString() + " ";
-						else
-							prod += pr.nonterminal.ToString() + " ";
-					}
-					prod = prod.Replace("EMPTY", "ɛ");
-					Console.WriteLine("{0},{1}->{2}", sy.Key.nonterminal, sy.Key.terminal, prod);
-				}
-				// ##### END PRINT PARSING TABLE ####
-				
-				if (s.predictiveParser(lt, false))
-					Console.WriteLine("Entrada Aceita");
-				else
-					Console.WriteLine("Entrada Nao Aceita");
-			}
-			else
-			{
-				Console.Write("\n\nWriting output.txt");
-				s.WriteOutput(lt);
-			}
-			*/
-			// Console.WriteLine('\u025B');
-			Console.Read();
-			
+
+			Console.ReadKey();
+
 		}
 	}
 }

@@ -546,40 +546,29 @@ namespace FormaisECompiladores
 			}
 		}
 
-		public void WriteOutput(List<Token.Tok> lt)
+		public void WriteOutput(List<Token.Tok> lt, StreamWriter sr)
 		{
 			string prod = "";
 
-			try
-			{   // Open the text file using a stream reader.
-				using (sr = new StreamWriter(@"output.txt"))
-				{
-					// Read the stream to a string, and write the string to the console.
-					foreach (var sy in ReferenceTable)
-					{
-						prod = "";
-						foreach (var pr in sy.Value)
-						{
-							if (pr.nonterminal.Equals(Sintatico.NonTerminal.EMPTY))
-								prod += pr.terminal.ToString() + " ";
-							else
-								prod += pr.nonterminal.ToString() + " ";
-						}
-						prod = prod.Replace("EMPTY", "ɛ");
-						sr.WriteLine("{0},{1}->{2}", sy.Key.nonterminal, sy.Key.terminal, prod);
-					}
-
-					if (predictiveParser(lt, true))
-						sr.WriteLine("Entrada Aceita");
-					else
-						sr.WriteLine("Entrada Nao Aceita");
-				}
-			}
-			catch (Exception e)
+			// Read the stream to a string, and write the string to the console.
+			foreach (var sy in ReferenceTable)
 			{
-				Console.WriteLine("The file could not be written:");
-				Console.WriteLine(e.Message);
+				prod = "";
+				foreach (var pr in sy.Value)
+				{
+					if (pr.nonterminal.Equals(Sintatico.NonTerminal.EMPTY))
+						prod += pr.terminal.ToString() + " ";
+					else
+						prod += pr.nonterminal.ToString() + " ";
+				}
+				prod = prod.Replace("EMPTY", "ɛ");
+				Console.Out.WriteLine("{0},{1}->{2}", sy.Key.nonterminal, sy.Key.terminal, prod);
 			}
+
+			if (predictiveParser(lt, sr))
+				Console.Out.WriteLine("Entrada Aceita");
+			else
+				Console.Out.WriteLine("Entrada Nao Aceita");
 		}
 
 		private List<Token.Terminals> getFirstFromProd(List<simbolo> lp)
@@ -780,100 +769,18 @@ namespace FormaisECompiladores
 				Console.WriteLine("Follow({0}): {1}", nt.ToString(), term);
 			}
 		}
-		public bool predictiveParser(List<Token.Tok> toks, bool fileOrConsole)
+		public bool predictiveParser(List<Token.Tok> toks, StreamWriter sr)
 		{
 			string output = "";
 			bool exit = true;
 			Stack<simbolo> pilha = new Stack<simbolo>();
 			List<simbolo> newItems = new List<simbolo>();
 
-			if (fileOrConsole)
-			{
-				sr.WriteLine("");
-				sr.WriteLine("Parser: (Pilha)");
-				sr.WriteLine(String.Format("|{0,-70}|{1,-70}|", "Stack", "Matched"));
-				sr.WriteLine(String.Format("|{0,70}|{0,70}|", "PROGRAM $"));
-				toks = checkDollarSign(toks);
-				pilha.Push(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.DOLLAR });
-				pilha.Push(new simbolo { nonterminal = NonTerminal.PROGRAM, terminal = Token.Terminals.EMPTY });
-				foreach (var token in toks)
-				{
-					bool searchingTerminal = true;
-					while (searchingTerminal)
-					{
-						newItems = new List<simbolo>();
-						newItems.Clear();
-						if (token.t.Equals(pilha.Peek().terminal))
-						{
-							pilha.Pop();
-							searchingTerminal = false;
-							output += token.s + " ";
-							if (token.s == "$")
-								return true;
-						}
-						else if (pilha.Peek().nonterminal.Equals(NonTerminal.EMPTY))
-						{
-							//terminal diferente da entrada
-							pilha.Pop();
-							output += token.s + " ";
-							exit = false;
 
-						}
-						else //NonTerminal para trocar
-						{
-							NonTerminal nt = pilha.Pop().nonterminal;
-							simbolo key = new simbolo { nonterminal = nt, terminal = token.t };
-							newItems = ReferenceTable[key];
-							if (newItems[0].terminal.Equals(Token.Terminals.EMPTY)
-								&& newItems[0].nonterminal.Equals(NonTerminal.EMPTY))
-								newItems.Reverse();
-							else
-							{
-								newItems.Reverse();
-								foreach (simbolo p in newItems)
-								{
-									pilha.Push(p);
-								}
-								newItems.Reverse();//obrigatorio
-							}
-						}
-
-						string st = "";
-						foreach (var p in pilha)
-						{
-							if (p.nonterminal.Equals(NonTerminal.EMPTY))
-							{
-								if (p.terminal.Equals(Token.Terminals.IDENT))
-								{
-									st += p.terminal + " ";
-									continue;
-								}
-								foreach (var t in toks)
-								{
-									if (t.t.Equals(p.terminal))
-									{
-										st += t.s + " ";
-										break;
-									}
-								}
-							}
-							else
-								st += p.nonterminal + " ";
-						}
-						//Console.WriteLine(st + "  | " + output);
-
-						sr.WriteLine(String.Format("|{0,70}|{1,70}|", st, output));
-						if (!exit)
-							return false;
-					}
-				}
-
-				return true;
-			}
-			Console.WriteLine("");
-			Console.WriteLine("Parser: (Pilha)");
-			Console.WriteLine(String.Format("|{0,-70}|{1,-70}|", "Stack", "Matched"));
-			Console.WriteLine(String.Format("|{0,70}|{0,70}|", "PROGRAM $"));
+			Console.Out.WriteLine("");
+			Console.Out.WriteLine("Parser: (Pilha)");
+			Console.Out.WriteLine(String.Format("|{0,-70}|{1,-70}|", "Stack", "Matched"));
+			Console.Out.WriteLine(String.Format("|{0,70}|{0,70}|", "PROGRAM $"));
 			toks = checkDollarSign(toks);
 			pilha.Push(new simbolo { nonterminal = NonTerminal.EMPTY, terminal = Token.Terminals.DOLLAR });
 			pilha.Push(new simbolo { nonterminal = NonTerminal.PROGRAM, terminal = Token.Terminals.EMPTY });
@@ -943,7 +850,7 @@ namespace FormaisECompiladores
 					}
 					//Console.WriteLine(st + "  | " + output);
 
-					Console.WriteLine(String.Format("|{0,70}|{1,70}|", st, output));
+					Console.Out.WriteLine(String.Format("|{0,70}|{1,70}|", st, output));
 					if (!exit)
 						return false;
 				}
