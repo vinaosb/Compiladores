@@ -155,6 +155,7 @@ namespace FormaisECompiladores
 			AttrCorrelation.Add(Terminals.DIVIDE, Attributes.ARITMETHIC);
 			AttrCorrelation.Add(Terminals.MODULUS, Attributes.ARITMETHIC);
 			AttrCorrelation.Add(Terminals.SEPARATOR, Attributes.SEPARATOR);
+			AttrCorrelation.Add(Terminals.ERROR, Attributes.ERROR);
 		}
 
 		public List<Tok> ReadFile()
@@ -262,6 +263,21 @@ namespace FormaisECompiladores
 			foreach (var l in LT)
 			{
 				sr.WriteLine("<{0},{1}>", l.a, l.s);
+			}
+			List<int> posErros = new List<int>();
+			int i = 0;
+			foreach (var l in LT)
+			{
+				if (l.a == Attributes.ERROR)
+					posErros.Add(i);
+				i++;
+			}
+			if (posErros.Count > 0)
+			{
+				foreach (int pos in posErros)
+				{
+					sr.WriteLine("Erro na posicao {0}", pos);
+				}
 			}
 		}
 
