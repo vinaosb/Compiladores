@@ -115,7 +115,6 @@ namespace FormaisECompiladores
 			TokenCorrelation.Add("/", Terminals.DIVIDE);
 			TokenCorrelation.Add("%", Terminals.MODULUS);
 			TokenCorrelation.Add(";", Terminals.SEPARATOR);
-			TokenCorrelation.Add("stringExtensa", Terminals.STR);
 
 			AttrCorrelation.Add(Terminals.IDENT, Attributes.ID);
 			AttrCorrelation.Add(Terminals.OPENBRACE, Attributes.BRKTPARE);
@@ -298,12 +297,20 @@ namespace FormaisECompiladores
 				if (mapString.ContainsKey(r))
 				{
 					real_r = mapString.GetValueOrDefault(r);
+					Tok temp;
+					temp.s = real_r;
+					temp.t = Terminals.STR;
+					temp.a = AttrCorrelation.GetValueOrDefault(temp.t);
+					tokens.Add(temp);
 				}
-				Tok temp;
-				temp.s = real_r;
-				temp.t = getTerminal(real_r);
-				temp.a = AttrCorrelation.GetValueOrDefault(temp.t);
-				tokens.Add(temp);
+				else
+				{
+					Tok temp;
+					temp.s = real_r;
+					temp.t = getTerminal(real_r);
+					temp.a = AttrCorrelation.GetValueOrDefault(temp.t);
+					tokens.Add(temp);
+				}
 			}
 
 			return tokens;
