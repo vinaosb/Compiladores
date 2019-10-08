@@ -1,8 +1,11 @@
 # Compiladores
 
 Universidade Federal de Santa Catarina
+
 INE5426 - Construcao de Compiladores
+
 Trabalho 1 - 2019/2
+
 Alunos:
 	- Bruno George Moraes (14100825)
 	- Marcelo Jose Dias (15205398)
