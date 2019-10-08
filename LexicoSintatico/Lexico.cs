@@ -245,45 +245,44 @@ namespace FormaisECompiladores
 
 		public void PrintToken(StreamWriter sr)
 		{
-			sr.WriteLine("Analise Lexica\n\n");
-			sr.WriteLine("Tabela de Simbolos\n");
-			TokenAttrCorrelation = new Dictionary<Attributes, HashSet<string>>();
-			foreach (var att in Enum.GetValues(typeof(Attributes)))
-			{
-				TokenAttrCorrelation.Add((Attributes)att, new HashSet<string>());
-			}
-			foreach (var l in LT)
-			{
-				TokenAttrCorrelation[l.a].Add(l.s);
-			}
-			foreach (var tac in TokenAttrCorrelation)
-			{
-				sr.Write("<{0}", tac.Key);
-				foreach (var str in tac.Value)
-				{
-					sr.Write(",{0}",str);
-				}
-				sr.Write(">\n");
-			}
-			sr.WriteLine("\n<Atributo, simbolo>\n");
-			foreach (var l in LT)
-			{
-				sr.WriteLine("<{0},{1}>", l.a, l.s);
-			}
-			List<int> posErros = new List<int>();
-			int i = 0;
+
+			bool erros = false;
 			foreach (var l in LT)
 			{
 				if (l.a == Attributes.ERROR)
-					posErros.Add(i);
-				i++;
-			}
-			if (posErros.Count > 0)
-			{
-				foreach (int pos in posErros)
 				{
-					sr.WriteLine("Erro na posicao {0}", pos);
+					sr.WriteLine("Erro na " + l.s);
+					erros = true;
 				}
+			}
+			if (!erros)
+			{
+				sr.WriteLine("Analise Lexica\n\n");
+				sr.WriteLine("Tabela de Simbolos\n");
+				TokenAttrCorrelation = new Dictionary<Attributes, HashSet<string>>();
+				foreach (var att in Enum.GetValues(typeof(Attributes)))
+				{
+					TokenAttrCorrelation.Add((Attributes)att, new HashSet<string>());
+				}
+				foreach (var l in LT)
+				{
+					TokenAttrCorrelation[l.a].Add(l.s);
+				}
+				foreach (var tac in TokenAttrCorrelation)
+				{
+					sr.Write("<{0}", tac.Key);
+					foreach (var str in tac.Value)
+					{
+						sr.Write(",{0}", str);
+					}
+					sr.Write(">\n");
+				}
+				sr.WriteLine("\n<Atributo, simbolo>\n");
+				foreach (var l in LT)
+				{
+					sr.WriteLine("<{0},{1}>", l.a, l.s);
+				}
+
 			}
 		}
 
@@ -323,15 +322,18 @@ namespace FormaisECompiladores
 		{
 			List<Tok> tokens = new List<Tok>();
 			char[] charSeparator = new char[] { ' ', '\n', '\t' };
-			string[] result;
+			string[] result, column;
+			int columnCount;
 
 			s = AddSpace(s);
 
 			result = s.Split(charSeparator, StringSplitOptions.RemoveEmptyEntries);
+			column = s.Split(charSeparator);
 
 
 			foreach (var r in result)
 			{
+				columnCount = 0;
 				string real_r = r;
 				if (mapString.ContainsKey(r))
 				{
@@ -350,7 +352,13 @@ namespace FormaisECompiladores
 					temp.a = AttrCorrelation.GetValueOrDefault(temp.t);
 					if (temp.t == Terminals.ERROR)
 					{
-						temp.s = "Linha " + line.ToString() + ": " + "\'" + temp.s + "\'";
+						foreach (var c in column)
+						{
+							if (c == r)
+								break;
+							columnCount++;
+						}
+						temp.s = "Linha " + line.ToString() + " Coluna " + columnCount.ToString() + ": " + "\'" + temp.s + "\'";
 					}
 					tokens.Add(temp);
 				}
