@@ -26,6 +26,8 @@ namespace FormaisECompiladores
 			FLOAT, // Floats
 			STRING, // Strings
 			TYPES, // tipos: int, float, string
+			CONSOLE, // print, read
+			RETURN,
 			NULL,
 			LOOP, // for, break
 			ITE, // if else
@@ -60,6 +62,8 @@ namespace FormaisECompiladores
 		public string Path { get; set; }
 		public Dictionary<string, Terminals> TokenCorrelation;
 		public Dictionary<Terminals, Attributes> AttrCorrelation;
+		public Dictionary<Attributes, HashSet<string>> TokenAttrCorrelation;
+		public List<Tok> LT;
 
 		// Could be moved to a better place
 		public Dictionary<string, string> mapString;
@@ -126,6 +130,13 @@ namespace FormaisECompiladores
 			AttrCorrelation.Add(Terminals.INT, Attributes.INT);
 			AttrCorrelation.Add(Terminals.STR, Attributes.STRING);
 			AttrCorrelation.Add(Terminals.FLT, Attributes.FLOAT);
+			AttrCorrelation.Add(Terminals.INTEGER_T, Attributes.TYPES);
+			AttrCorrelation.Add(Terminals.STRING_T, Attributes.TYPES);
+			AttrCorrelation.Add(Terminals.FLOAT_T, Attributes.TYPES);
+			AttrCorrelation.Add(Terminals.NULL, Attributes.NULL);
+			AttrCorrelation.Add(Terminals.PRINT, Attributes.CONSOLE);
+			AttrCorrelation.Add(Terminals.RETURN, Attributes.RETURN);
+			AttrCorrelation.Add(Terminals.READ, Attributes.CONSOLE);
 			AttrCorrelation.Add(Terminals.IF, Attributes.ITE);
 			AttrCorrelation.Add(Terminals.ELSE, Attributes.ITE);
 			AttrCorrelation.Add(Terminals.FOR, Attributes.LOOP);
@@ -144,11 +155,12 @@ namespace FormaisECompiladores
 			AttrCorrelation.Add(Terminals.DIVIDE, Attributes.ARITMETHIC);
 			AttrCorrelation.Add(Terminals.MODULUS, Attributes.ARITMETHIC);
 			AttrCorrelation.Add(Terminals.SEPARATOR, Attributes.SEPARATOR);
+			AttrCorrelation.Add(Terminals.ERROR, Attributes.ERROR);
 		}
 
 		public List<Tok> ReadFile()
 		{
-			List<Tok> LT = new List<Tok>();
+			LT = new List<Tok>();
 
 			try
 			{   // Open the text file using a stream reader.
@@ -172,9 +184,15 @@ namespace FormaisECompiladores
 					string[] register = uniline_text.Split(charSeparator, StringSplitOptions.RemoveEmptyEntries);
 					uniline_text = string.Join(" ", uniline_text.Split(charSeparator, StringSplitOptions.RemoveEmptyEntries)).Trim();
 					token_string_text = SearchStrings(uniline_text);
+					String token_string_text2 = SearchStrings(full_text);
 
-
-					LT.AddRange(Tokenize(token_string_text));
+					char[] splitter = new char[] {'\n' };
+					var result = token_string_text2.Split(splitter);
+					int lineCount = 0;
+					foreach (var r in result)
+					{
+						LT.AddRange(Tokenize(r, lineCount++));
+					}
 
 				}
 			}
@@ -225,6 +243,48 @@ namespace FormaisECompiladores
 			return result;
 		}
 
+		public void PrintToken(StreamWriter sr)
+		{
+
+			bool erros = false;
+			foreach (var l in LT)
+			{
+				if (l.a == Attributes.ERROR)
+				{
+					sr.WriteLine("Erro na " + l.s);
+					erros = true;
+				}
+			}
+			if (!erros)
+			{
+				sr.WriteLine("Analise Lexica\n\n");
+				sr.WriteLine("Tabela de Simbolos\n");
+				TokenAttrCorrelation = new Dictionary<Attributes, HashSet<string>>();
+				foreach (var att in Enum.GetValues(typeof(Attributes)))
+				{
+					TokenAttrCorrelation.Add((Attributes)att, new HashSet<string>());
+				}
+				foreach (var l in LT)
+				{
+					TokenAttrCorrelation[l.a].Add(l.s);
+				}
+				foreach (var tac in TokenAttrCorrelation)
+				{
+					sr.Write("<{0}", tac.Key);
+					foreach (var str in tac.Value)
+					{
+						sr.Write(",{0}", str);
+					}
+					sr.Write(">\n");
+				}
+				sr.WriteLine("\n<Atributo, simbolo>\n");
+				foreach (var l in LT)
+				{
+					sr.WriteLine("<{0},{1}>", l.a, l.s);
+				}
+
+			}
+		}
 
 		private String AddSpace(String line)
 		{
@@ -258,18 +318,22 @@ namespace FormaisECompiladores
 			return line;
 		}
 
-		public List<Tok> Tokenize(String s)
+		public List<Tok> Tokenize(String s, int line)
 		{
 			List<Tok> tokens = new List<Tok>();
-			char[] charSeparator = new char[] { ' ' };
-			string[] result;
+			char[] charSeparator = new char[] { ' ', '\n', '\t' };
+			string[] result, column;
+			int columnCount;
 
 			s = AddSpace(s);
 
 			result = s.Split(charSeparator, StringSplitOptions.RemoveEmptyEntries);
+			column = s.Split(charSeparator, StringSplitOptions.None);
+
 
 			foreach (var r in result)
-			{
+			{ 
+				columnCount = 0;
 				string real_r = r;
 				if (mapString.ContainsKey(r))
 				{
@@ -286,6 +350,16 @@ namespace FormaisECompiladores
 					temp.s = real_r;
 					temp.t = GetTerminal(real_r);
 					temp.a = AttrCorrelation.GetValueOrDefault(temp.t);
+					if (temp.t == Terminals.ERROR)
+					{
+						foreach (var c in column)
+						{
+							if (c == r)
+								break;
+							columnCount++;
+						}
+						temp.s = "Linha " + line.ToString() + " Simbolo " + columnCount.ToString() + ": " + "\'" + temp.s + "\'";
+					}
 					tokens.Add(temp);
 				}
 			}
@@ -305,9 +379,6 @@ namespace FormaisECompiladores
 				return TokenCorrelation.GetValueOrDefault(s);
 			if (Char.IsLetter(s[0]))
 				return Terminals.IDENT;
-			if (Char.Equals(s[0], '"'))
-				return Terminals.STR;
-			Console.WriteLine("{0} é invalido", s);
 			return Terminals.ERROR;
 		}
 	}
