@@ -90,8 +90,10 @@ namespace FormaisECompiladores
 			}
 
 		}
+        
 
-		static void Main()
+
+            static void Main()
 		{
 			Console.OutputEncoding = System.Text.Encoding.UTF8;
 

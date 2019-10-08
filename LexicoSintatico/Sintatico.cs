@@ -17,7 +17,12 @@ namespace FormaisECompiladores
 {
 	public class Sintatico
 	{
-		public enum NonTerminal
+        public string message_error = "";
+        public string sentence_hint = "";
+        public string first_expected = "";
+
+
+        public enum NonTerminal
 		{
 			PROGRAM,
 			STATEMENT,
@@ -560,9 +565,17 @@ namespace FormaisECompiladores
 				sr.WriteLine("Entrada Aceita");
 			else
 				sr.WriteLine("Entrada Nao Aceita");
-		}
 
-		private List<Token.Terminals> GetFirstFromProd(List<Simbolo> lp)
+
+            sr.WriteLine(message_error);
+            sr.WriteLine("\nProduções possíveis:");
+            sr.WriteLine(sentence_hint);
+            sr.WriteLine("\nSímbolos esperados:");
+            sr.WriteLine(first_expected);
+        }
+       
+
+        private List<Token.Terminals> GetFirstFromProd(List<Simbolo> lp)
 		{
 			List<Token.Terminals> lt = new List<Token.Terminals>();
 
@@ -723,6 +736,31 @@ namespace FormaisECompiladores
 				Console.WriteLine("Follow({0}): {1}", nt.ToString(), term);
 			}
 		}
+
+        public void setErrorMessage(NonTerminal nt, string t) {
+            foreach (var productions in Producoes.GetValueOrDefault(nt))
+            {
+
+                string forma_sentencial = "";
+                foreach (Token.Terminals final_t in GetFirstFromProd(productions))
+                {
+                    first_expected += final_t.ToString() + ",";
+                }
+                first_expected = first_expected.Replace("EMPTY", "ɛ");
+
+                foreach (var symbols in productions)
+                {
+                    forma_sentencial += (
+                        !symbols.Nonterminal.Equals(NonTerminal.EMPTY) ? symbols.Nonterminal.ToString() : (
+                            !symbols.Terminal.Equals(Token.Terminals.EMPTY) ? symbols.Terminal.ToString() : "ɛ")
+                    );
+                    forma_sentencial += " ";
+                }
+
+                sentence_hint += nt + " -> " + forma_sentencial + "\n";
+            }
+            message_error = "Erro Sintático: Esperando: '" + nt + "' - Achado: '" + t + "'";
+        }
 		public bool PredictiveParser(List<Token.Tok> toks, StreamWriter sr)
 		{
 			string output = "";
@@ -731,10 +769,10 @@ namespace FormaisECompiladores
 			_ = new List<Simbolo>();
 
 
-			sr.WriteLine("");
-			sr.WriteLine("Parser: (Pilha)");
-			sr.WriteLine(String.Format("|{0,-150}|{1,-150}|", "Stack", "Matched"));
-			sr.WriteLine(String.Format("|{0,150}|{0,150}|", "PROGRAM $"));
+			//sr.WriteLine("");
+			//sr.WriteLine("Parser: (Pilha)");
+			//sr.WriteLine(String.Format("|{0,-150}|{1,-150}|", "Stack", "Matched"));
+			//sr.WriteLine(String.Format("|{0,150}|{0,150}|", "PROGRAM $"));
 			toks = CheckDollarSign(toks);
 			pilha.Push(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.DOLLAR });
 			pilha.Push(new Simbolo { Nonterminal = NonTerminal.PROGRAM, Terminal = Token.Terminals.EMPTY });
@@ -754,18 +792,27 @@ namespace FormaisECompiladores
 							return true;
 					}
 					else if (pilha.Peek().Nonterminal.Equals(NonTerminal.EMPTY))
-					{
-						//terminal diferente da entrada
-						pilha.Pop();
+                    {
+                        NonTerminal nt = pilha.Pop().Nonterminal;
+                        //terminal diferente da entrada
+                        pilha.Pop();
 						output += token.s + " ";
 						exit = false;
+                        setErrorMessage(nt, token.s);
 
-					}
+
+                    }
 					else //NonTerminal para trocar
 					{
 						NonTerminal nt = pilha.Pop().Nonterminal;
 						Simbolo key = new Simbolo { Nonterminal = nt, Terminal = token.t };
-						newItems = ReferenceTable[key];
+                        try{
+                            newItems = ReferenceTable[key];
+                        }catch (Exception)
+                        {
+                            setErrorMessage(nt, token.s);
+                            return false;
+                        }
 						if (newItems[0].Terminal.Equals(Token.Terminals.EMPTY)
 							&& newItems[0].Nonterminal.Equals(NonTerminal.EMPTY))
 							newItems.Reverse();
@@ -802,15 +849,15 @@ namespace FormaisECompiladores
 						else
 							st += p.Nonterminal + " ";
 					}
-					//Console.WriteLine(st + "  | " + output);
+                    //Console.WriteLine(st + "  | " + output);
+                    //sr.WriteLine(String.Format("|{0,150}|{1,150}|", st, output));
 
-					sr.WriteLine(String.Format("|{0,150}|{1,150}|", st, output));
-					if (!exit)
+                    if (!exit)
 						return false;
 				}
 			}
 
-			return true;
+            return true;
 		}
 
 		private List<Token.Tok> CheckDollarSign(List<Token.Tok> toks)
