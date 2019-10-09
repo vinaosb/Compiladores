@@ -564,14 +564,17 @@ namespace FormaisECompiladores
 			if (PredictiveParser(lt, sr))
 				sr.WriteLine("Entrada Aceita");
 			else
+			{
 				sr.WriteLine("Entrada Nao Aceita");
 
+				sr.WriteLine(message_error);
+				sr.WriteLine("\nProduções possíveis:");
+				sr.WriteLine(sentence_hint);
+				sr.WriteLine("\nSímbolos esperados:");
+				sr.WriteLine(first_expected);
+			}
 
-            sr.WriteLine(message_error);
-            sr.WriteLine("\nProduções possíveis:");
-            sr.WriteLine(sentence_hint);
-            sr.WriteLine("\nSímbolos esperados:");
-            sr.WriteLine(first_expected);
+
         }
        
 
