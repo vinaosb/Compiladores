@@ -21,6 +21,7 @@ namespace FormaisECompiladores
 		public enum Attributes
 		{
 			ID, // IDENT
+			DEFFUNC, // DEF
 			BRKTPARE, // {}[]()
 			INT, // Inteiros
 			FLOAT, // Floats
@@ -35,6 +36,7 @@ namespace FormaisECompiladores
 			COMPARISON, // <= >= != ...
 			ARITMETHIC, // + - * / 
 			SEPARATOR, // ;
+			COMMA, // ,
 			ERROR,
 			EMPTY, // Auxiliar pro sintatico
 			DOLLAR
@@ -42,6 +44,7 @@ namespace FormaisECompiladores
 		public enum Terminals
 		{
 			IDENT, // ID
+			DEF, // Def
 			OPENBRACE, CLOSEBRACE, OPENBRKT, CLOSEBRKT, OPENPARENT, CLOSEPARENT, // {}[]()
 			INT, // int_constant
 			STR, // string_constant
@@ -53,6 +56,7 @@ namespace FormaisECompiladores
 			LT, LE, EQ, GT, GE, NE, // < <= == > >= <>
 			ADD, MINUS, MULTIPLY, DIVIDE, MODULUS, // + - * / %
 			SEPARATOR, // ;
+			COMMA, // ,
 			ERROR,
 			EMPTY, // Auxiliar pro sintatico
 			DOLLAR
@@ -88,6 +92,8 @@ namespace FormaisECompiladores
 
 		public void Init()
 		{
+			TokenCorrelation.Add("def", Terminals.DEF);
+			TokenCorrelation.Add(",", Terminals.COMMA);
 			TokenCorrelation.Add("{", Terminals.OPENBRACE);
 			TokenCorrelation.Add("}", Terminals.CLOSEBRACE);
 			TokenCorrelation.Add("[", Terminals.OPENBRKT);
@@ -121,6 +127,8 @@ namespace FormaisECompiladores
 			TokenCorrelation.Add(";", Terminals.SEPARATOR);
 
 			AttrCorrelation.Add(Terminals.IDENT, Attributes.ID);
+			AttrCorrelation.Add(Terminals.DEF, Attributes.DEFFUNC);
+			AttrCorrelation.Add(Terminals.COMMA, Attributes.COMMA);
 			AttrCorrelation.Add(Terminals.OPENBRACE, Attributes.BRKTPARE);
 			AttrCorrelation.Add(Terminals.OPENBRKT, Attributes.BRKTPARE);
 			AttrCorrelation.Add(Terminals.OPENPARENT, Attributes.BRKTPARE);
