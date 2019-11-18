@@ -100,8 +100,8 @@ namespace FormaisECompiladores
 		{
 			Console.OutputEncoding = System.Text.Encoding.UTF8;
 			ci = new CultureInfo("en");
-			Console.Out.WriteLine(DateTime.Now.ToString(ci.DateTimeFormat));
 			rr = new ResourceManager(resourceString, Assembly.GetExecutingAssembly());
+			Console.Out.WriteLine(DateTime.Now.ToString(ci.DateTimeFormat));
 
 			Console.Out.WriteLine(rr.GetString("Menu0",ci));
 			Console.Out.WriteLine(rr.GetString("Menu1", ci));
