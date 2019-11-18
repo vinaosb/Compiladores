@@ -9,13 +9,17 @@
 //      - Vinícius Schwinden Berkenbrock (16100751)
 //#################################################
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Resources;
+using System.Reflection;
 
 namespace FormaisECompiladores
 {
 	class Program
 	{
+		public static string resourceString = "LexicoSintatico.Resource1";
 		enum Output
 		{
 			LexSin,
@@ -92,11 +96,12 @@ namespace FormaisECompiladores
             static void Main()
 		{
 			Console.OutputEncoding = System.Text.Encoding.UTF8;
+			ResourceManager rr = new ResourceManager(resourceString, Assembly.GetExecutingAssembly());
 
-			Console.Out.WriteLine("Digite 0 para ver a Análise Léxica e Sintática");
-			Console.Out.WriteLine("Digite 1 para ver apenas a Análise Léxica");
-			Console.Out.WriteLine("Digite 2 para ver apenas a Análise Sintática");
-			Console.Out.WriteLine("Default = 0");
+			Console.Out.WriteLine(rr.GetString("Menu0"));
+			Console.Out.WriteLine(rr.GetString("Menu1"));
+			Console.Out.WriteLine(rr.GetString("Menu2"));
+			Console.Out.WriteLine(rr.GetString("MenuDef"));
 			Output outputMode;
 			try
 			{
@@ -108,9 +113,9 @@ namespace FormaisECompiladores
 			}
 
 
-			Console.Out.WriteLine("Digite 0 para criar um arquivo de output");
-			Console.Out.WriteLine("Digite 1 para mostrar a saída no console");
-			Console.Out.WriteLine("Default = 0");
+			Console.Out.WriteLine(rr.GetString("Menu3"));
+			Console.Out.WriteLine(rr.GetString("Menu4"));
+			Console.Out.WriteLine(rr.GetString("MenuDef"));
 			ExitMode exitMode;
 			try
 			{
@@ -127,8 +132,8 @@ namespace FormaisECompiladores
 			do
 			{
 				string path = @"";
-				Console.Out.WriteLine("Escreva o nome do arquivo de leitura");
-				Console.Out.WriteLine("Esse arquivo deve estar na pasta do executável");
+				Console.Out.WriteLine(rr.GetString("NomeArquivo1"));
+				Console.Out.WriteLine(rr.GetString("NomeArquivo2"));
 				name = Console.ReadLine();
 				path += name;
 
@@ -156,14 +161,14 @@ namespace FormaisECompiladores
 					{
 						Console.SetOut(sw);
 						Console.OutputEncoding = System.Text.Encoding.UTF8;
-						Console.Out.WriteLine("\n\nPressione uma tecla para continuar para o Sintatico\n\n");
+						Console.Out.WriteLine("\n\n"+ rr.GetString("Stop") + "\n\n");
 						Console.ReadKey();
 					}
 					PrintSintatico(s, lt, exitMode);
 					break;
 			}
 
-			Console.Out.WriteLine("\n\n###Fim de processo###");
+			Console.Out.WriteLine("\n\n" + rr.GetString("End"));
 			Console.ReadKey();
 			Console.Out.Close();
 

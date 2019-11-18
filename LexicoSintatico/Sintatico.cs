@@ -11,6 +11,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using System.Resources;
 using System.Text;
 
 namespace FormaisECompiladores
@@ -59,6 +61,7 @@ namespace FormaisECompiladores
 			public Token.Terminals Terminal { get; set; }
 		}
 
+		private ResourceManager rr = new ResourceManager(Program.resourceString, Assembly.GetExecutingAssembly());
 		public Dictionary<NonTerminal, List<List<Simbolo>>> Producoes { get; set; }
 		public Dictionary<Simbolo, List<Simbolo>> ReferenceTable { get; set; }
 		public Dictionary<NonTerminal, List<Token.Terminals>> first;
