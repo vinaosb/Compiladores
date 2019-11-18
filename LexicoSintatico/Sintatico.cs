@@ -61,7 +61,6 @@ namespace FormaisECompiladores
 			public Token.Terminals Terminal { get; set; }
 		}
 
-		private ResourceManager rr = new ResourceManager(Program.resourceString, Assembly.GetExecutingAssembly());
 		public Dictionary<NonTerminal, List<List<Simbolo>>> Producoes { get; set; }
 		public Dictionary<Simbolo, List<Simbolo>> ReferenceTable { get; set; }
 		public Dictionary<NonTerminal, List<Token.Terminals>> first;
@@ -565,15 +564,15 @@ namespace FormaisECompiladores
 			}
 
 			if (PredictiveParser(lt, sr))
-				sr.WriteLine("Entrada Aceita");
+				sr.WriteLine(Program.rr.GetString("Accepted", Program.ci));
 			else
 			{
-				sr.WriteLine("Entrada Nao Aceita");
+				sr.WriteLine(Program.rr.GetString("Rejected", Program.ci));
 
 				sr.WriteLine(message_error);
-				sr.WriteLine("\nProduções possíveis:");
+				sr.WriteLine("\n" + Program.rr.GetString("ProdPoss", Program.ci));
 				sr.WriteLine(sentence_hint);
-				sr.WriteLine("\nSímbolos esperados:");
+				sr.WriteLine("\n" + Program.rr.GetString("SimbEsperado", Program.ci));
 				sr.WriteLine(first_expected);
 			}
 

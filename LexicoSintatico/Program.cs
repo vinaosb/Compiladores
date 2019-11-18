@@ -14,12 +14,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Resources;
 using System.Reflection;
+using System.Globalization;
 
 namespace FormaisECompiladores
 {
 	class Program
 	{
 		public static string resourceString = "LexicoSintatico.Resource1";
+		public static ResourceManager rr;
+		public static CultureInfo ci;
 		enum Output
 		{
 			LexSin,
@@ -39,7 +42,7 @@ namespace FormaisECompiladores
 			switch (mode)
 			{
 				case ExitMode.Console:
-					Console.Out.Write("\n\n######Analise Lexica######\n\n");
+					Console.Out.Write("\n\n"+ rr.GetString("AnaLex", ci) +"\n\n");
 					sr = new StreamWriter(Console.OpenStandardOutput())
 					{
 						AutoFlush = true
@@ -50,7 +53,7 @@ namespace FormaisECompiladores
 					t.PrintToken(sr);
 					break;
 				default:
-					Console.Out.Write("Gerando arquivo AnaliseLexica.txt\n");
+					Console.Out.Write(rr.GetString("GerAnaLex", ci) + "\n");
 					sr = new StreamWriter(@"AnaliseLexica.txt")
 					{
 						AutoFlush = true
@@ -70,7 +73,7 @@ namespace FormaisECompiladores
 			switch (mode)
 			{
 				case ExitMode.Console:
-					Console.Out.Write("\n\n######Analise Sintatica######\n\n");
+					Console.Out.Write("\n\n"+ rr.GetString("AnaSint", ci) +"\n\n");
 					sr = new StreamWriter(Console.OpenStandardOutput())
 					{
 						AutoFlush = true
@@ -81,7 +84,7 @@ namespace FormaisECompiladores
 					s.WriteOutput(lt, sr);
 					break;
 				default:
-					Console.Out.Write("Escrevendo AnaliseSintatica.txt\n\n");
+					Console.Out.Write(rr.GetString("GerAnaSint", ci) + "\n\n");
 					sr = new StreamWriter(@"AnaliseSintatica.txt");
 					s.WriteOutput(lt, sr);
 					sr.Flush();
@@ -96,12 +99,13 @@ namespace FormaisECompiladores
             static void Main()
 		{
 			Console.OutputEncoding = System.Text.Encoding.UTF8;
-			ResourceManager rr = new ResourceManager(resourceString, Assembly.GetExecutingAssembly());
+			ci = new CultureInfo("en");
+			rr = new ResourceManager(resourceString, Assembly.GetExecutingAssembly());
 
-			Console.Out.WriteLine(rr.GetString("Menu0"));
-			Console.Out.WriteLine(rr.GetString("Menu1"));
-			Console.Out.WriteLine(rr.GetString("Menu2"));
-			Console.Out.WriteLine(rr.GetString("MenuDef"));
+			Console.Out.WriteLine(rr.GetString("Menu0",ci));
+			Console.Out.WriteLine(rr.GetString("Menu1", ci));
+			Console.Out.WriteLine(rr.GetString("Menu2", ci));
+			Console.Out.WriteLine(rr.GetString("MenuDef", ci));
 			Output outputMode;
 			try
 			{
@@ -113,9 +117,9 @@ namespace FormaisECompiladores
 			}
 
 
-			Console.Out.WriteLine(rr.GetString("Menu3"));
-			Console.Out.WriteLine(rr.GetString("Menu4"));
-			Console.Out.WriteLine(rr.GetString("MenuDef"));
+			Console.Out.WriteLine(rr.GetString("Menu3", ci));
+			Console.Out.WriteLine(rr.GetString("Menu4", ci));
+			Console.Out.WriteLine(rr.GetString("MenuDef", ci));
 			ExitMode exitMode;
 			try
 			{
@@ -132,8 +136,8 @@ namespace FormaisECompiladores
 			do
 			{
 				string path = @"";
-				Console.Out.WriteLine(rr.GetString("NomeArquivo1"));
-				Console.Out.WriteLine(rr.GetString("NomeArquivo2"));
+				Console.Out.WriteLine(rr.GetString("NomeArquivo1", ci));
+				Console.Out.WriteLine(rr.GetString("NomeArquivo2", ci));
 				name = Console.ReadLine();
 				path += name;
 
@@ -161,14 +165,14 @@ namespace FormaisECompiladores
 					{
 						Console.SetOut(sw);
 						Console.OutputEncoding = System.Text.Encoding.UTF8;
-						Console.Out.WriteLine("\n\n"+ rr.GetString("Stop") + "\n\n");
+						Console.Out.WriteLine("\n\n"+ rr.GetString("Stop", ci) + "\n\n");
 						Console.ReadKey();
 					}
 					PrintSintatico(s, lt, exitMode);
 					break;
 			}
 
-			Console.Out.WriteLine("\n\n" + rr.GetString("End"));
+			Console.Out.WriteLine("\n\n" + rr.GetString("End", ci));
 			Console.ReadKey();
 			Console.Out.Close();
 

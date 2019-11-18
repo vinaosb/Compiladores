@@ -61,7 +61,6 @@ namespace FormaisECompiladores
 		};
 
 
-		private ResourceManager rr = new ResourceManager(Program.resourceString, Assembly.GetExecutingAssembly());
 		public string Path { get; set; }
 		public Dictionary<string, Terminals> TokenCorrelation;
 		public Dictionary<Terminals, Attributes> AttrCorrelation;
@@ -201,7 +200,7 @@ namespace FormaisECompiladores
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine("The file could not be read:");
+				Console.WriteLine(Program.rr.GetString("ErroArquivoNaoLido", Program.ci));
 				Console.WriteLine(e.Message);
 				return null;
 			}
@@ -254,14 +253,14 @@ namespace FormaisECompiladores
 			{
 				if (l.a == Attributes.ERROR)
 				{
-					sr.WriteLine("Erro na " + l.s);
+					sr.WriteLine(Program.rr.GetString("ErrorAt", Program.ci) + l.s);
 					erros = true;
 				}
 			}
 			if (!erros)
 			{
-				sr.WriteLine("Analise Lexica\n\n");
-				sr.WriteLine("Tabela de Simbolos\n");
+				sr.WriteLine(Program.rr.GetString("AnaLex2", Program.ci) + "\n\n");
+				sr.WriteLine(Program.rr.GetString("TabSimb", Program.ci) + "\n");
 				TokenAttrCorrelation = new Dictionary<Attributes, HashSet<string>>();
 				foreach (var att in Enum.GetValues(typeof(Attributes)))
 				{
@@ -280,7 +279,7 @@ namespace FormaisECompiladores
 					}
 					sr.Write(">\n");
 				}
-				sr.WriteLine("\n<Atributo, simbolo>\n");
+				sr.WriteLine("\n"+ Program.rr.GetString("AtrSimb", Program.ci) + "\n");
 				foreach (var l in LT)
 				{
 					sr.WriteLine("<{0},{1}>", l.a, l.s);
@@ -361,7 +360,7 @@ namespace FormaisECompiladores
 								break;
 							columnCount++;
 						}
-						temp.s = "Linha " + line.ToString() + " Simbolo " + columnCount.ToString() + ": " + "\'" + temp.s + "\'";
+						temp.s = Program.rr.GetString("Linha", Program.ci) + line.ToString() + Program.rr.GetString("Simb", Program.ci) + columnCount.ToString() + ": " + "\'" + temp.s + "\'";
 					}
 					tokens.Add(temp);
 				}

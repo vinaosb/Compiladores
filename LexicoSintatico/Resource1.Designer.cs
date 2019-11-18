@@ -61,7 +61,52 @@ namespace LexicoSintatico {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a ###Fim de processo###.
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Input Accepted.
+        /// </summary>
+        internal static string Accepted {
+            get {
+                return ResourceManager.GetString("Accepted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a ######Lexical Analysis######.
+        /// </summary>
+        internal static string AnaLex {
+            get {
+                return ResourceManager.GetString("AnaLex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Lexical Analysis.
+        /// </summary>
+        internal static string AnaLex2 {
+            get {
+                return ResourceManager.GetString("AnaLex2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a ######Syntactic Analysis######.
+        /// </summary>
+        internal static string AnaSint {
+            get {
+                return ResourceManager.GetString("AnaSint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a &lt;Attribute, Symbol&gt;.
+        /// </summary>
+        internal static string AtrSimb {
+            get {
+                return ResourceManager.GetString("AtrSimb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a ###End of Processing###.
         /// </summary>
         internal static string End {
             get {
@@ -70,7 +115,52 @@ namespace LexicoSintatico {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a Digite 0 para ver a Análise Léxica e Sintática.
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The file could not be read:.
+        /// </summary>
+        internal static string ErroArquivoNaoLido {
+            get {
+                return ResourceManager.GetString("ErroArquivoNaoLido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Error at .
+        /// </summary>
+        internal static string ErrorAt {
+            get {
+                return ResourceManager.GetString("ErrorAt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Generating file AnaliseLexica.txt.
+        /// </summary>
+        internal static string GerAnaLex {
+            get {
+                return ResourceManager.GetString("GerAnaLex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Generating file AnaliseSintatica.txt.
+        /// </summary>
+        internal static string GerAnaSint {
+            get {
+                return ResourceManager.GetString("GerAnaSint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a  Line .
+        /// </summary>
+        internal static string Linha {
+            get {
+                return ResourceManager.GetString("Linha", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Press 0 to see both the Lexical and Syntactic Analysis.
         /// </summary>
         internal static string Menu0 {
             get {
@@ -79,7 +169,7 @@ namespace LexicoSintatico {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a Digite 1 para ver apenas a Análise Léxica.
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Press 1 to see the Lexical Analysis Only.
         /// </summary>
         internal static string Menu1 {
             get {
@@ -88,7 +178,7 @@ namespace LexicoSintatico {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a Digite 2 para ver apenas a Análise Sintática.
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Press 2 to see the Syntactic Analysis Only.
         /// </summary>
         internal static string Menu2 {
             get {
@@ -97,7 +187,7 @@ namespace LexicoSintatico {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a Digite 0 para criar um arquivo de output.
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Press 0 to create output files.
         /// </summary>
         internal static string Menu3 {
             get {
@@ -106,7 +196,7 @@ namespace LexicoSintatico {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a Digite 1 para mostrar a saída no console.
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Press 1 to display the output in the console.
         /// </summary>
         internal static string Menu4 {
             get {
@@ -124,7 +214,7 @@ namespace LexicoSintatico {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a Escreva o nome do arquivo de leitura.
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Type the file name to be tested.
         /// </summary>
         internal static string NomeArquivo1 {
             get {
@@ -133,7 +223,7 @@ namespace LexicoSintatico {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a Esse arquivo deve estar na pasta do executável.
+        ///   Consulta uma cadeia de caracteres localizada semelhante a This file has to be in the same folder as the binary.
         /// </summary>
         internal static string NomeArquivo2 {
             get {
@@ -142,11 +232,56 @@ namespace LexicoSintatico {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a Pressione uma tecla para continuar para o Sintatico.
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Possible Productions:.
+        /// </summary>
+        internal static string ProdPoss {
+            get {
+                return ResourceManager.GetString("ProdPoss", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Input Rejected.
+        /// </summary>
+        internal static string Rejected {
+            get {
+                return ResourceManager.GetString("Rejected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a  Symbol .
+        /// </summary>
+        internal static string Simb {
+            get {
+                return ResourceManager.GetString("Simb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Expected Symbols:.
+        /// </summary>
+        internal static string SimbEsperado {
+            get {
+                return ResourceManager.GetString("SimbEsperado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Press any key to continue to the Syntactic Analisis.
         /// </summary>
         internal static string Stop {
             get {
                 return ResourceManager.GetString("Stop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Symbols Table.
+        /// </summary>
+        internal static string TabSimb {
+            get {
+                return ResourceManager.GetString("TabSimb", resourceCulture);
             }
         }
     }

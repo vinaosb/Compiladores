@@ -118,78 +118,78 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Accepted" xml:space="preserve">
-    <value>Input Accepted</value>
+    <value>Entrada Aceita</value>
   </data>
   <data name="AnaLex" xml:space="preserve">
-    <value>######Lexical Analysis######</value>
+    <value>######Analise Lexica######</value>
   </data>
   <data name="AnaLex2" xml:space="preserve">
-    <value>Lexical Analysis</value>
+    <value>Analise Lexica</value>
   </data>
   <data name="AnaSint" xml:space="preserve">
-    <value>######Syntactic Analysis######</value>
+    <value>######Analise Sintatica######</value>
   </data>
   <data name="AtrSimb" xml:space="preserve">
-    <value>&lt;Attribute, Symbol&gt;</value>
+    <value>&lt;Atributo, simbolo&gt;</value>
   </data>
   <data name="End" xml:space="preserve">
-    <value>###End of Processing###</value>
+    <value>###Fim de processo###</value>
   </data>
   <data name="ErroArquivoNaoLido" xml:space="preserve">
-    <value>The file could not be read:</value>
+    <value>O arquivo não pode ser lido:</value>
   </data>
   <data name="ErrorAt" xml:space="preserve">
-    <value>Error at </value>
+    <value>Erro na </value>
   </data>
   <data name="GerAnaLex" xml:space="preserve">
-    <value>Generating file AnaliseLexica.txt</value>
+    <value>Gerando arquivo AnaliseLexica.txt</value>
   </data>
   <data name="GerAnaSint" xml:space="preserve">
-    <value>Generating file AnaliseSintatica.txt</value>
+    <value>Escrevendo AnaliseSintatica.txt</value>
   </data>
   <data name="Linha" xml:space="preserve">
-    <value> Line </value>
+    <value> Linha </value>
   </data>
   <data name="Menu0" xml:space="preserve">
-    <value>Press 0 to see both the Lexical and Syntactic Analysis</value>
+    <value>Digite 0 para ver a Análise Léxica e Sintática</value>
   </data>
   <data name="Menu1" xml:space="preserve">
-    <value>Press 1 to see the Lexical Analysis Only</value>
+    <value>Digite 1 para ver apenas a Análise Léxica</value>
   </data>
   <data name="Menu2" xml:space="preserve">
-    <value>Press 2 to see the Syntactic Analysis Only</value>
+    <value>Digite 2 para ver apenas a Análise Sintática</value>
   </data>
   <data name="Menu3" xml:space="preserve">
-    <value>Press 0 to create output files</value>
+    <value>Digite 0 para criar um arquivo de output</value>
   </data>
   <data name="Menu4" xml:space="preserve">
-    <value>Press 1 to display the output in the console</value>
+    <value>Digite 1 para mostrar a saída no console</value>
   </data>
   <data name="MenuDef" xml:space="preserve">
     <value>Default = 0</value>
   </data>
   <data name="NomeArquivo1" xml:space="preserve">
-    <value>Type the file name to be tested</value>
+    <value>Escreva o nome do arquivo de leitura</value>
   </data>
   <data name="NomeArquivo2" xml:space="preserve">
-    <value>This file has to be in the same folder as the binary</value>
+    <value>Esse arquivo deve estar na pasta do executável</value>
   </data>
   <data name="ProdPoss" xml:space="preserve">
-    <value>Possible Productions:</value>
+    <value>Produções possíveis:</value>
   </data>
   <data name="Rejected" xml:space="preserve">
-    <value>Input Rejected</value>
+    <value>Entrada Nao Aceita</value>
   </data>
   <data name="Simb" xml:space="preserve">
-    <value> Symbol </value>
+    <value> Simbolo </value>
   </data>
   <data name="SimbEsperado" xml:space="preserve">
-    <value>Expected Symbols:</value>
+    <value>Símbolos esperados:</value>
   </data>
   <data name="Stop" xml:space="preserve">
-    <value>Press any key to continue to the Syntactic Analisis</value>
+    <value>Pressione uma tecla para continuar para o Sintatico</value>
   </data>
   <data name="TabSimb" xml:space="preserve">
-    <value>Symbols Table</value>
+    <value>Tabela de Simbolos</value>
   </data>
 </root>
