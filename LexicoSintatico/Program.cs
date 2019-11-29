@@ -9,20 +9,13 @@
 //      - Vinícius Schwinden Berkenbrock (16100751)
 //#################################################
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Resources;
-using System.Reflection;
-using System.Globalization;
 
 namespace FormaisECompiladores
 {
 	class Program
 	{
-		public static string resourceString = "LexicoSintatico.Resource1";
-		public static ResourceManager rr;
-		public static CultureInfo ci;
 		enum Output
 		{
 			LexSin,
@@ -42,7 +35,7 @@ namespace FormaisECompiladores
 			switch (mode)
 			{
 				case ExitMode.Console:
-					Console.Out.Write("\n\n"+ rr.GetString("AnaLex", ci) +"\n\n");
+					Console.Out.Write("\n\n######Analise Lexica######\n\n");
 					sr = new StreamWriter(Console.OpenStandardOutput())
 					{
 						AutoFlush = true
@@ -53,7 +46,7 @@ namespace FormaisECompiladores
 					t.PrintToken(sr);
 					break;
 				default:
-					Console.Out.Write(rr.GetString("GerAnaLex", ci) + "\n");
+					Console.Out.Write("Gerando arquivo AnaliseLexica.txt\n");
 					sr = new StreamWriter(@"AnaliseLexica.txt")
 					{
 						AutoFlush = true
@@ -73,7 +66,7 @@ namespace FormaisECompiladores
 			switch (mode)
 			{
 				case ExitMode.Console:
-					Console.Out.Write("\n\n"+ rr.GetString("AnaSint", ci) +"\n\n");
+					Console.Out.Write("\n\n######Analise Sintatica######\n\n");
 					sr = new StreamWriter(Console.OpenStandardOutput())
 					{
 						AutoFlush = true
@@ -84,7 +77,7 @@ namespace FormaisECompiladores
 					s.WriteOutput(lt, sr);
 					break;
 				default:
-					Console.Out.Write(rr.GetString("GerAnaSint", ci) + "\n\n");
+					Console.Out.Write("Escrevendo AnaliseSintatica.txt\n\n");
 					sr = new StreamWriter(@"AnaliseSintatica.txt");
 					s.WriteOutput(lt, sr);
 					sr.Flush();
@@ -99,14 +92,11 @@ namespace FormaisECompiladores
             static void Main()
 		{
 			Console.OutputEncoding = System.Text.Encoding.UTF8;
-			ci = new CultureInfo("en");
-			rr = new ResourceManager(resourceString, Assembly.GetExecutingAssembly());
-			Console.Out.WriteLine(DateTime.Now.ToString(ci.DateTimeFormat));
 
-			Console.Out.WriteLine(rr.GetString("Menu0",ci));
-			Console.Out.WriteLine(rr.GetString("Menu1", ci));
-			Console.Out.WriteLine(rr.GetString("Menu2", ci));
-			Console.Out.WriteLine(rr.GetString("MenuDef", ci));
+			Console.Out.WriteLine("Digite 0 para ver a Análise Léxica e Sintática");
+			Console.Out.WriteLine("Digite 1 para ver apenas a Análise Léxica");
+			Console.Out.WriteLine("Digite 2 para ver apenas a Análise Sintática");
+			Console.Out.WriteLine("Default = 0");
 			Output outputMode;
 			try
 			{
@@ -118,9 +108,9 @@ namespace FormaisECompiladores
 			}
 
 
-			Console.Out.WriteLine(rr.GetString("Menu3", ci));
-			Console.Out.WriteLine(rr.GetString("Menu4", ci));
-			Console.Out.WriteLine(rr.GetString("MenuDef", ci));
+			Console.Out.WriteLine("Digite 0 para criar um arquivo de output");
+			Console.Out.WriteLine("Digite 1 para mostrar a saída no console");
+			Console.Out.WriteLine("Default = 0");
 			ExitMode exitMode;
 			try
 			{
@@ -137,8 +127,8 @@ namespace FormaisECompiladores
 			do
 			{
 				string path = @"";
-				Console.Out.WriteLine(rr.GetString("NomeArquivo1", ci));
-				Console.Out.WriteLine(rr.GetString("NomeArquivo2", ci));
+				Console.Out.WriteLine("Escreva o nome do arquivo de leitura");
+				Console.Out.WriteLine("Esse arquivo deve estar na pasta do executável");
 				name = Console.ReadLine();
 				path += name;
 
@@ -166,14 +156,14 @@ namespace FormaisECompiladores
 					{
 						Console.SetOut(sw);
 						Console.OutputEncoding = System.Text.Encoding.UTF8;
-						Console.Out.WriteLine("\n\n"+ rr.GetString("Stop", ci) + "\n\n");
+						Console.Out.WriteLine("\n\nPressione uma tecla para continuar para o Sintatico\n\n");
 						Console.ReadKey();
 					}
 					PrintSintatico(s, lt, exitMode);
 					break;
 			}
 
-			Console.Out.WriteLine("\n\n" + rr.GetString("End", ci));
+			Console.Out.WriteLine("\n\n###Fim de processo###");
 			Console.ReadKey();
 			Console.Out.Close();
 

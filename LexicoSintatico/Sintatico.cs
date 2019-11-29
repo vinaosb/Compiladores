@@ -11,8 +11,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using System.Resources;
 using System.Text;
 
 namespace FormaisECompiladores
@@ -27,9 +25,17 @@ namespace FormaisECompiladores
         public enum NonTerminal
 		{
 			PROGRAM,
+			FUNCLIST,
+			FUNCLIST2,
+			FUNCDEF,
+			PARAMLIST,
+			PARAMLIST2,
 			STATEMENT,
 			VARDECL,
 			VAR2,
+			FUNCCALL,
+			PARAMLISTCALL,
+			PARAMLISTCALL2,
 			ATRIBSTAT,
 			ATREXP,
 			PRINTSTAT,
@@ -90,7 +96,7 @@ namespace FormaisECompiladores
 				llp = new List<List<Simbolo>>();
 				switch (nt)
 				{
-					// PROGRAM -> STATEMENT | &
+					// PROGRAM -> STATEMENT | FUNCLIST | &
 					case NonTerminal.PROGRAM:
 						lp = new List<Simbolo>();
 						lp.Clear();
@@ -98,7 +104,81 @@ namespace FormaisECompiladores
 						llp.Add(lp);
 						lp = new List<Simbolo>();
 						lp.Clear();
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.FUNCLIST, Terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						lp = new List<Simbolo>();
+						lp.Clear();
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						break;
+					// FUNCLIST -> FUNCDEF FUNCLIST2
+					case NonTerminal.FUNCLIST:
+						lp = new List<Simbolo>();
+						lp.Clear();
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.FUNCDEF, Terminal = Token.Terminals.EMPTY });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.FUNCLIST2, Terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						break;
+					// FUNCLIST2 -> FUNCLIST | &
+					case NonTerminal.FUNCLIST2:
+						lp = new List<Simbolo>();
+						lp.Clear();
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.FUNCLIST, Terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						lp = new List<Simbolo>();
+						lp.Clear();
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						break;
+					// FUNCDEF -> def ident ( PARAMLIST ) { STATELIST }
+					case NonTerminal.FUNCDEF:
+						lp = new List<Simbolo>();
+						lp.Clear();
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.DEF });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.IDENT });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.OPENPARENT });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.PARAMLIST, Terminal = Token.Terminals.EMPTY });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.CLOSEPARENT });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.OPENBRKT });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.STATELIST, Terminal = Token.Terminals.EMPTY });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.CLOSEBRKT });
+						llp.Add(lp);
+						break;
+					// PARAMLIST -> int ident PARAMLIST2 | float ident PARAMLIST2 | string ident PARAMLIST2 | &
+					case NonTerminal.PARAMLIST:
+						lp = new List<Simbolo>();
+						lp.Clear();
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						lp = new List<Simbolo>();
+						lp.Clear();
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.INTEGER_T });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.IDENT });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.PARAMLIST2, Terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						lp = new List<Simbolo>();
+						lp.Clear();
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.FLOAT_T });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.IDENT });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.PARAMLIST2, Terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						lp = new List<Simbolo>();
+						lp.Clear();
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.STRING_T });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.IDENT });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.PARAMLIST2, Terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						break;
+					// PARAMLIST2 -> , PARAMLIST | &
+					case NonTerminal.PARAMLIST2:
+						lp = new List<Simbolo>();
+						lp.Clear();
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						lp = new List<Simbolo>();
+						lp.Clear();
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.COMMA });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.PARAMLIST, Terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						break;
 					// STATEMENT -> VARDECL; | ATRIBSTAT; | PRINTSTAT; | READSTAT; | RETURNSTAT; | IFSTAT; | FORSTAT; | {STATELIST}| break ; | ;
@@ -196,7 +276,7 @@ namespace FormaisECompiladores
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.ATREXP, Terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						break;
-					// ATREXP -> EXPRESSION | ALLOCEXPRESSION
+					// ATREXP -> EXPRESSION | ALLOCEXPRESSION | FUNCCALL
 					case NonTerminal.ATREXP:
 						lp = new List<Simbolo>();
 						lp.Clear();
@@ -205,6 +285,44 @@ namespace FormaisECompiladores
 						lp = new List<Simbolo>();
 						lp.Clear();
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.ALLOCEXPRESSION, Terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						lp = new List<Simbolo>();
+						lp.Clear();
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.FUNCCALL, Terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						break;
+					// FUNCCALL -> ident ( PARAMLISTCALL )
+					case NonTerminal.FUNCCALL:
+						lp = new List<Simbolo>();
+						lp.Clear();
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.IDENT });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.OPENPARENT });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.PARAMLISTCALL, Terminal = Token.Terminals.EMPTY });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.CLOSEPARENT });
+						llp.Add(lp);
+						break;
+					// PARAMLISTCALL -> ident PARAMLISTCALL2 | &
+					case NonTerminal.PARAMLISTCALL:
+						lp = new List<Simbolo>();
+						lp.Clear();
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.IDENT });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.PARAMLISTCALL2, Terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						lp = new List<Simbolo>();
+						lp.Clear();
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						break;
+					// PARAMLISTCALL2 -> , PARAMLISTCALL | &
+					case NonTerminal.PARAMLISTCALL2:
+						lp = new List<Simbolo>();
+						lp.Clear();
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.COMMA });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.PARAMLISTCALL, Terminal = Token.Terminals.EMPTY });
+						llp.Add(lp);
+						lp = new List<Simbolo>();
+						lp.Clear();
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						break;
 					// PRINTSTAT -> print EXPRESSION
@@ -296,13 +414,13 @@ namespace FormaisECompiladores
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.ALLOC2, Terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						break;
-					// ALLOC2 -> int [ EXPRESSION ] ALLOC3 | float [ EXPRESSION ] ALLOC3 | string [ EXPRESSION ] ALLOC3
+					// ALLOC2 -> int [ NUMEXPRESSION ] ALLOC3 | float [ NUMEXPRESSION ] ALLOC3 | string [ NUMEXPRESSION ] ALLOC3
 					case NonTerminal.ALLOC2:
 						lp = new List<Simbolo>();
 						lp.Clear();
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.INTEGER_T });
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.OPENBRKT });
-						lp.Add(new Simbolo { Nonterminal = NonTerminal.EXPRESSION, Terminal = Token.Terminals.EMPTY });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.NUMEXPRESSION, Terminal = Token.Terminals.EMPTY });
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.CLOSEBRKT });
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.ALLOC3, Terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
@@ -310,7 +428,7 @@ namespace FormaisECompiladores
 						lp.Clear();
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.FLOAT_T });
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.OPENBRKT });
-						lp.Add(new Simbolo { Nonterminal = NonTerminal.EXPRESSION, Terminal = Token.Terminals.EMPTY });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.NUMEXPRESSION, Terminal = Token.Terminals.EMPTY });
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.CLOSEBRKT });
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.ALLOC3, Terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
@@ -318,17 +436,17 @@ namespace FormaisECompiladores
 						lp.Clear();
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.STRING_T });
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.OPENBRKT });
-						lp.Add(new Simbolo { Nonterminal = NonTerminal.EXPRESSION, Terminal = Token.Terminals.EMPTY });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.NUMEXPRESSION, Terminal = Token.Terminals.EMPTY });
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.CLOSEBRKT });
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.ALLOC3, Terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						break;
-					// ALLOC3 -> [ EXPRESSION ] ALLOC3 | e
+					// ALLOC3 -> [ NUMEXPRESSION ] ALLOC3 | e
 					case NonTerminal.ALLOC3:
 						lp = new List<Simbolo>();
 						lp.Clear();
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.OPENBRKT });
-						lp.Add(new Simbolo { Nonterminal = NonTerminal.EXPRESSION, Terminal = Token.Terminals.EMPTY });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.NUMEXPRESSION, Terminal = Token.Terminals.EMPTY });
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.CLOSEBRKT });
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.ALLOC3, Terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
@@ -564,15 +682,15 @@ namespace FormaisECompiladores
 			}
 
 			if (PredictiveParser(lt, sr))
-				sr.WriteLine(Program.rr.GetString("Accepted", Program.ci));
+				sr.WriteLine("Entrada Aceita");
 			else
 			{
-				sr.WriteLine(Program.rr.GetString("Rejected", Program.ci));
+				sr.WriteLine("Entrada Nao Aceita");
 
 				sr.WriteLine(message_error);
-				sr.WriteLine("\n" + Program.rr.GetString("ProdPoss", Program.ci));
+				sr.WriteLine("\nProduções possíveis:");
 				sr.WriteLine(sentence_hint);
-				sr.WriteLine("\n" + Program.rr.GetString("SimbEsperado", Program.ci));
+				sr.WriteLine("\nSímbolos esperados:");
 				sr.WriteLine(first_expected);
 			}
 

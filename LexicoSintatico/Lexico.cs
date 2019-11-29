@@ -11,8 +11,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using System.Resources;
 using System.Text;
 
 namespace FormaisECompiladores
@@ -23,6 +21,7 @@ namespace FormaisECompiladores
 		public enum Attributes
 		{
 			ID, // IDENT
+			DEFFUNC, // DEF
 			BRKTPARE, // {}[]()
 			INT, // Inteiros
 			FLOAT, // Floats
@@ -37,6 +36,7 @@ namespace FormaisECompiladores
 			COMPARISON, // <= >= != ...
 			ARITMETHIC, // + - * / 
 			SEPARATOR, // ;
+			COMMA, // ,
 			ERROR,
 			EMPTY, // Auxiliar pro sintatico
 			DOLLAR
@@ -44,6 +44,7 @@ namespace FormaisECompiladores
 		public enum Terminals
 		{
 			IDENT, // ID
+			DEF, // Def
 			OPENBRACE, CLOSEBRACE, OPENBRKT, CLOSEBRKT, OPENPARENT, CLOSEPARENT, // {}[]()
 			INT, // int_constant
 			STR, // string_constant
@@ -55,6 +56,7 @@ namespace FormaisECompiladores
 			LT, LE, EQ, GT, GE, NE, // < <= == > >= <>
 			ADD, MINUS, MULTIPLY, DIVIDE, MODULUS, // + - * / %
 			SEPARATOR, // ;
+			COMMA, // ,
 			ERROR,
 			EMPTY, // Auxiliar pro sintatico
 			DOLLAR
@@ -90,6 +92,8 @@ namespace FormaisECompiladores
 
 		public void Init()
 		{
+			TokenCorrelation.Add("def", Terminals.DEF);
+			TokenCorrelation.Add(",", Terminals.COMMA);
 			TokenCorrelation.Add("{", Terminals.OPENBRACE);
 			TokenCorrelation.Add("}", Terminals.CLOSEBRACE);
 			TokenCorrelation.Add("[", Terminals.OPENBRKT);
@@ -123,6 +127,8 @@ namespace FormaisECompiladores
 			TokenCorrelation.Add(";", Terminals.SEPARATOR);
 
 			AttrCorrelation.Add(Terminals.IDENT, Attributes.ID);
+			AttrCorrelation.Add(Terminals.DEF, Attributes.DEFFUNC);
+			AttrCorrelation.Add(Terminals.COMMA, Attributes.COMMA);
 			AttrCorrelation.Add(Terminals.OPENBRACE, Attributes.BRKTPARE);
 			AttrCorrelation.Add(Terminals.OPENBRKT, Attributes.BRKTPARE);
 			AttrCorrelation.Add(Terminals.OPENPARENT, Attributes.BRKTPARE);
@@ -200,7 +206,7 @@ namespace FormaisECompiladores
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine(Program.rr.GetString("ErroArquivoNaoLido", Program.ci));
+				Console.WriteLine("The file could not be read:");
 				Console.WriteLine(e.Message);
 				return null;
 			}
@@ -253,14 +259,14 @@ namespace FormaisECompiladores
 			{
 				if (l.a == Attributes.ERROR)
 				{
-					sr.WriteLine(Program.rr.GetString("ErrorAt", Program.ci) + l.s);
+					sr.WriteLine("Erro na " + l.s);
 					erros = true;
 				}
 			}
 			if (!erros)
 			{
-				sr.WriteLine(Program.rr.GetString("AnaLex2", Program.ci) + "\n\n");
-				sr.WriteLine(Program.rr.GetString("TabSimb", Program.ci) + "\n");
+				sr.WriteLine("Analise Lexica\n\n");
+				sr.WriteLine("Tabela de Simbolos\n");
 				TokenAttrCorrelation = new Dictionary<Attributes, HashSet<string>>();
 				foreach (var att in Enum.GetValues(typeof(Attributes)))
 				{
@@ -279,7 +285,7 @@ namespace FormaisECompiladores
 					}
 					sr.Write(">\n");
 				}
-				sr.WriteLine("\n"+ Program.rr.GetString("AtrSimb", Program.ci) + "\n");
+				sr.WriteLine("\n<Atributo, simbolo>\n");
 				foreach (var l in LT)
 				{
 					sr.WriteLine("<{0},{1}>", l.a, l.s);
@@ -360,7 +366,7 @@ namespace FormaisECompiladores
 								break;
 							columnCount++;
 						}
-						temp.s = Program.rr.GetString("Linha", Program.ci) + line.ToString() + Program.rr.GetString("Simb", Program.ci) + columnCount.ToString() + ": " + "\'" + temp.s + "\'";
+						temp.s = "Linha " + line.ToString() + " Simbolo " + columnCount.ToString() + ": " + "\'" + temp.s + "\'";
 					}
 					tokens.Add(temp);
 				}
