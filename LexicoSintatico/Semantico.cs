@@ -20,7 +20,24 @@ namespace LexicoSintatico
 			Sintatic = new Sintatico();
 		}
 
-		public bool WriteOutput(List<Token.Tok> lt, StreamWriter sr)
+		public void WriteOutput(List<Token.Tok> lt, StreamWriter sr)
+		{
+			if (Parser(lt))
+				sr.WriteLine("Entrada Aceita");
+			else
+			{
+				sr.WriteLine("Entrada Nao Aceita");
+
+				sr.WriteLine(Sintatic.message_error);
+				sr.WriteLine("\nProduções possíveis:");
+				sr.WriteLine(Sintatic.sentence_hint);
+				sr.WriteLine("\nSímbolos esperados:");
+				sr.WriteLine(Sintatic.first_expected);
+			}
+
+		}
+
+		public bool Parser(List<Token.Tok> lt)
 		{
 			Stack<Simbolo> pilha = new Stack<Simbolo>();
 
@@ -43,7 +60,7 @@ namespace LexicoSintatico
 					{
 						searchingTerminal = false;
 						bool success;
-						if (CurrentContext.ChecaSeEhTerminal(token.t))
+						if (CurrentContext.ChecaSeEhTerminalDoContexto(token.t))
 						{
 							if (CurrentContext.FechaContextoDoPai)
 								CurrentContext = CurrentContext.ContextoPai.ContextoPai;
@@ -52,10 +69,10 @@ namespace LexicoSintatico
 						}
 						switch (token.t)
 						{
-							case Token.Terminals.DEF:
-							case Token.Terminals.INTEGER_T:
-							case Token.Terminals.FLOAT_T:
-							case Token.Terminals.STRING_T:
+							case Token.Terminals.DEF: // Adicao de Simbolo
+							case Token.Terminals.INTEGER_T: // Adicao de Simbolo
+							case Token.Terminals.FLOAT_T: // Adicao de Simbolo
+							case Token.Terminals.STRING_T: // Adicao de Simbolo
 								success = CurrentContext.AddSimbolo(lt[i + 1].s, token.t);
 								if (!success)
 								{
@@ -63,7 +80,7 @@ namespace LexicoSintatico
 									return false;
 								}
 								break;
-							case Token.Terminals.DOLLAR:
+							case Token.Terminals.DOLLAR: // Fim de Passada
 								return true;
 							default:
 								break;
@@ -76,33 +93,49 @@ namespace LexicoSintatico
 						NonTerminal nt = pilha.Pop().Nonterminal;
 						switch (nt)
 						{
-							case NonTerminal.FUNCDEF:
+							case NonTerminal.FUNCDEF: // Criacao de Contexto
 								temp = CurrentContext.CriaContexto(Token.Terminals.CLOSEBRACE);
 								CurrentContext = temp;
 								break;
-							case NonTerminal.STATEMENT:
+							case NonTerminal.STATEMENT: // Criacao de Contexto
 								if (token.t.Equals(Token.Terminals.OPENBRACE))
 									temp = CurrentContext.CriaContexto(Token.Terminals.CLOSEBRACE);
 								else
 									temp = CurrentContext.CriaContexto(Token.Terminals.SEPARATOR);
 								CurrentContext = temp;
 								break;
-							case NonTerminal.IF2:
+							case NonTerminal.IF2: // Criacao de Contexto
 								if (!token.t.Equals(Token.Terminals.ELSE))
 									break;
 								temp = CurrentContext.CriaContexto(Token.Terminals.CLOSEBRACE);
 								CurrentContext = temp;
 								CurrentContext.FechaContextoDoPai = true;
 								break;
-							case NonTerminal.IFSTAT:
+							case NonTerminal.IFSTAT: // Criacao de Contexto
 								temp = CurrentContext.CriaContexto(Token.Terminals.CLOSEBRACE);
 								CurrentContext = temp;
 								CurrentContext.FechaContextoDoPai = true;
 								break;
-							case NonTerminal.FORSTAT:
+							case NonTerminal.FORSTAT: // Criacao de Contexto
 								temp = CurrentContext.CriaContexto(Token.Terminals.CLOSEBRACE, true);
 								CurrentContext = temp;
 								CurrentContext.FechaContextoDoPai = true;
+								break;
+							case NonTerminal.NUMEXPRESSION: // Verificacao de Tipos
+								var tipo = CurrentContext.PegaTipoDoSimbolo(token.s);
+								for (int j = i+1; j < lt.Count; j++)
+								{
+									var tipo2 = CurrentContext.PegaTipoDoSimbolo(lt[j].s);
+									if (lt[j].a.Equals(Token.Attributes.ASSERT) |
+										lt[j].a.Equals(Token.Attributes.ARITMETHIC) |
+										lt[j].t.Equals(tipo) |
+										tipo.Equals(tipo2))
+										continue;
+									if (lt[j].a.Equals(Token.Attributes.SEPARATOR))
+										break;
+									SetErrorMessage(nt, lt[j].s);
+									return false;
+								}
 								break;
 							default:
 								break;
@@ -126,7 +159,6 @@ namespace LexicoSintatico
 					}
 				}
 			}
-
 			return false;
 		}
 
@@ -152,7 +184,7 @@ namespace LexicoSintatico
 
 				Sintatic.sentence_hint += nt + " -> " + forma_sentencial + "\n";
 			}
-			Sintatic.message_error = "Erro Sintático: Esperando: '" + nt + "' - Achado: '" + t + "'";
+			Sintatic.message_error = "Erro Semantico: Esperando: '" + nt + "' - Achado: '" + t + "'";
 		}
 
 		private class Contexto
@@ -199,6 +231,11 @@ namespace LexicoSintatico
 				return true;
 			}
 
+			public Token.Terminals PegaTipoDoSimbolo(string simbolo)
+			{
+				return TabelaDeSimbolos[simbolo].Item2;
+			}
+
 			public bool ChecaSeSimboloETipoBatem(string simbolo, Token.Terminals tipo)
 			{
 				if (!ChecaSeTemSimbolo(simbolo))
@@ -223,7 +260,7 @@ namespace LexicoSintatico
 				return contexto;
 			}
 
-			public bool ChecaSeEhTerminal(Token.Terminals term)
+			public bool ChecaSeEhTerminalDoContexto(Token.Terminals term)
 			{
 				return TerminalDoContexto.Contains(term);
 			}
