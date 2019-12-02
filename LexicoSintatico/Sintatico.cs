@@ -83,7 +83,6 @@ namespace FormaisECompiladores
 			//printFollow();
 			ReferenceTable = new Dictionary<Simbolo, List<Simbolo>>();
 			InitRefTable();
-
 		}
 
 		private void InitProd()
@@ -681,7 +680,7 @@ namespace FormaisECompiladores
 				//sr.WriteLine("{0},{1}->{2}", sy.Key.Nonterminal, sy.Key.Terminal, prod);
 			}
 
-			if (PredictiveParser(lt, sr))
+			if (PredictiveParser(lt))
 				sr.WriteLine("Entrada Aceita");
 			else
 			{
@@ -698,7 +697,7 @@ namespace FormaisECompiladores
         }
        
 
-        private List<Token.Terminals> GetFirstFromProd(List<Simbolo> lp)
+        public List<Token.Terminals> GetFirstFromProd(List<Simbolo> lp)
 		{
 			List<Token.Terminals> lt = new List<Token.Terminals>();
 
@@ -884,12 +883,11 @@ namespace FormaisECompiladores
             }
             message_error = "Erro Sintático: Esperando: '" + nt + "' - Achado: '" + t + "'";
         }
-		public bool PredictiveParser(List<Token.Tok> toks, StreamWriter sr)
+		public bool PredictiveParser(List<Token.Tok> toks)
 		{
 			string output = "";
 			bool exit = true;
 			Stack<Simbolo> pilha = new Stack<Simbolo>();
-			_ = new List<Simbolo>();
 
 
 			//sr.WriteLine("");
@@ -922,8 +920,6 @@ namespace FormaisECompiladores
 						output += token.s + " ";
 						exit = false;
                         setErrorMessage(nt, token.s);
-
-
                     }
 					else //NonTerminal para trocar
 					{
@@ -983,7 +979,7 @@ namespace FormaisECompiladores
             return true;
 		}
 
-		private List<Token.Tok> CheckDollarSign(List<Token.Tok> toks)
+		public List<Token.Tok> CheckDollarSign(List<Token.Tok> toks)
 		{
 			if (!toks[toks.Count - 1].t.Equals(Token.Terminals.DOLLAR))
 			{
