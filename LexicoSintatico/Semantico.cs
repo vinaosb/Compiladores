@@ -80,6 +80,13 @@ namespace LexicoSintatico
 									return false;
 								}
 								break;
+							case Token.Terminals.BREAK:
+								if (!CurrentContext.ChecaSePodeTerBreak())
+								{
+									SetErrorMessage(last,token.s);
+									return false;
+								}
+								break;
 							case Token.Terminals.DOLLAR: // Fim de Passada
 								return true;
 							default:
@@ -128,6 +135,7 @@ namespace LexicoSintatico
 									var tipo2 = CurrentContext.PegaTipoDoSimbolo(lt[j].s);
 									if (lt[j].a.Equals(Token.Attributes.ASSERT) |
 										lt[j].a.Equals(Token.Attributes.ARITMETHIC) |
+										lt[j].a.Equals(Token.Attributes.COMPARISON) |
 										lt[j].t.Equals(tipo) |
 										tipo.Equals(tipo2))
 										continue;
@@ -201,7 +209,7 @@ namespace LexicoSintatico
 				TabelaDeSimbolos = new Dictionary<string, (string, Token.Terminals)>();
 				SubContextos = new List<Contexto>();
 				ContextoPai = pai;
-				IsLoop = loop;
+				IsLoop = loop | pai.ChecaSePodeTerBreak();
 				TerminalDoContexto = new List<Token.Terminals>();
 				TerminalDoContexto.Add(terminal);
 				FechaContextoDoPai = false;
