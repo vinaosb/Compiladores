@@ -62,6 +62,15 @@ namespace FormaisECompiladores
 			DOLLAR
 		};
 
+		public string TerminalToString(Terminals val)
+		{
+			if (val == Terminals.EMPTY)
+				return "";
+			if (val == Terminals.DOLLAR)
+				return "$";
+			return val.ToString();
+		}
+
 
 		public string Path { get; set; }
 		public Dictionary<string, Terminals> TokenCorrelation;
@@ -79,6 +88,11 @@ namespace FormaisECompiladores
 			public string s;
 			public Terminals t;
 			public Attributes a;
+
+			public override string ToString()
+			{
+				return s;
+			}
 		}
 
 		public Token(string Path)

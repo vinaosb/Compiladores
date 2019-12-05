@@ -1,20 +1,88 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using FormaisECompiladores;
 using static FormaisECompiladores.Sintatico;
+using static FormaisECompiladores.Token;
+using static LexicoSintatico.Arvore<FormaisECompiladores.Sintatico.Simbolo>;
 
 namespace LexicoSintatico
 {
+
 	public class Semantico
 	{
-		Arvore<Simbolo> ArvoreSimbolos;
+		Arvore<Terminals> Arvore;
 		Sintatico SintaticoAux;
-		Arvore<Token.Terminals> Contexto;
-		public Semantico()
+		List<Tok> Lt;
+		public Semantico(List<Tok> lt)
 		{
-			ArvoreSimbolos = new Arvore<Simbolo>();
+			Arvore = new Arvore<Terminals>();
 			SintaticoAux = new Sintatico();
+			Lt = lt;
+			MontarArvore();
+		}
+
+		public bool PodeTerBreak(Nodo<Simbolo> nodo)
+		{
+			Simbolo t = new Simbolo();
+			t.Terminal = Terminals.EMPTY;
+			t.Nonterminal = NonTerminal.FORSTAT;
+			return nodo.PaiContemDado(t);
+		}
+
+		public void MontarArvore()
+		{
+			Stack<Simbolo> pilha = new Stack<Simbolo>();
+			Arvore.Raiz = new Arvore<Terminals>.Nodo<Terminals>(Terminals.EMPTY);
+			var atual = Arvore.Raiz;
+
+			Lt = SintaticoAux.CheckDollarSign(Lt);
+			pilha.Push(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.DOLLAR });
+			pilha.Push(new Simbolo { Nonterminal = NonTerminal.PROGRAM, Terminal = Token.Terminals.EMPTY });
+			foreach (var token in Lt)
+			{
+				bool searchingTerminal = true;
+				while (searchingTerminal)
+				{
+					List<Simbolo> newItems = new List<Simbolo>();
+					newItems.Clear();
+					if (token.t.Equals(pilha.Peek().Terminal))
+					{
+						pilha.Pop();
+						searchingTerminal = false;
+						atual.AddFilho(token.t);
+						
+						if (token.s == "$")
+							return;
+					}
+					else //NonTerminal para trocar
+					{
+						NonTerminal nt = pilha.Pop().Nonterminal;
+						Simbolo key = new Simbolo { Nonterminal = nt, Terminal = token.t };
+						newItems = SintaticoAux.ReferenceTable[key];
+						if (newItems[0].Terminal.Equals(Token.Terminals.EMPTY)
+							&& newItems[0].Nonterminal.Equals(NonTerminal.EMPTY))
+							newItems.Reverse();
+						else
+						{
+							newItems.Reverse();
+							foreach (Simbolo p in newItems)
+							{
+								atual.AddFilho(Terminals.EMPTY);
+								pilha.Push(p);
+							}
+							atual = atual.PegaFilho();
+							newItems.Reverse();//obrigatorio
+						}
+					}
+				}
+			}
+		}
+
+		public void WriteOutput(StreamWriter sr)
+		{
+			Arvore.PrintPosOrdem(sr);
 		}
 	}
 

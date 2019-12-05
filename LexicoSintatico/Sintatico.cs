@@ -65,6 +65,11 @@ namespace FormaisECompiladores
 		{
 			public NonTerminal Nonterminal { get; set; }
 			public Token.Terminals Terminal { get; set; }
+
+			public override string ToString()
+			{
+				return Nonterminal.ToString() + "," + Terminal.ToString();
+			}
 		}
 
 		public Dictionary<NonTerminal, List<List<Simbolo>>> Producoes { get; set; }
@@ -672,7 +677,7 @@ namespace FormaisECompiladores
 				string prod = "";
 				foreach (var pr in sy.Value)
 				{
-					if (pr.Nonterminal.Equals(Sintatico.NonTerminal.EMPTY))
+					if (pr.Nonterminal.Equals(NonTerminal.EMPTY))
 						prod += pr.Terminal.ToString() + " ";
 					else
 						prod += pr.Nonterminal.ToString() + " ";
@@ -889,7 +894,6 @@ namespace FormaisECompiladores
 			string output = "";
 			bool exit = true;
 			Stack<Simbolo> pilha = new Stack<Simbolo>();
-			_ = new List<Simbolo>();
 
 
 			//sr.WriteLine("");
@@ -983,7 +987,7 @@ namespace FormaisECompiladores
             return true;
 		}
 
-		private List<Token.Tok> CheckDollarSign(List<Token.Tok> toks)
+		public List<Token.Tok> CheckDollarSign(List<Token.Tok> toks)
 		{
 			if (!toks[toks.Count - 1].t.Equals(Token.Terminals.DOLLAR))
 			{
