@@ -1,69 +1,49 @@
-﻿/*using FormaisECompiladores;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using FormaisECompiladores;
 using static FormaisECompiladores.Sintatico;
 
 namespace LexicoSintatico
 {
 	public class GeradorCodigo
 	{
-		public List<string[]> LinhasDeCodigo { get; set; }
-		public int ContLinhas { get; set; }
-		public int ContTemporarios { get; set; }
-		public Sintatico Sintatic { get; private set; }
-
+		private List<Contexto> Contextos;
+		private Contexto CurrentContext;
+		private Sintatico Sintatic;
+		private string Error;
 		public GeradorCodigo()
 		{
-			LinhasDeCodigo = new List<string[]>();
-			ContLinhas = 0;
-			ContTemporarios = 0;
+			Contextos = new List<Contexto>();
+			CurrentContext = new Contexto(Token.Terminals.DOLLAR);
+			Contextos.Add(CurrentContext);
+			Sintatic = new Sintatico();
 		}
 
-		//Goto
-		public string[] GeraLinha(string label)
+		public void WriteOutput(List<Token.Tok> lt, StreamWriter sr)
 		{
-			string[] ret = new string[3];
-			//label
-			ret[0] = ContLinhas.ToString();
-			//dest
-			ret[1] = "goto";
-			//op
-			ret[2] = label;
-			return ret;
-		}
-
-		// L C R G L2
-		public string[] GeraLinha(string comp, string result, string label)
-		{
-			return GeraLinha("goto", comp, result, label);
-		}
-
-		// L D V1 OP V2
-		public string[] GeraLinha(string op, string dest, string var1, string var2)
-		{
-			string[] ret = new string[5];
-			//label
-			ret[0] = ContLinhas.ToString();
-			//dest
-			if (dest == "")
+			if (Parser(lt))
 			{
-				dest = "T" + ContTemporarios.ToString();
-				ContTemporarios++;
+				foreach (var c in Contextos)
+				{
+					c.Print(sr);
+				}
+				sr.WriteLine("Expressões Aritmeticas Válidas");
+				sr.WriteLine("Declaração de Variáveis por Escopo OK");
+				sr.WriteLine("'breaks' Válidos");
 			}
-			ret[1] = dest;
-			//op
-			ret[3] = op;
-			//var1
-			ret[2] = var1;
-			//var2
-			ret[4] = var2;
-			return ret;
+			else
+			{
+				sr.WriteLine("Entrada Nao Aceita");
+
+				sr.WriteLine(Error);
+			}
+
 		}
 
-		public void Parser(List<Token.Tok> lt)
+		public bool Parser(List<Token.Tok> lt)
 		{
-
 			Stack<Simbolo> pilha = new Stack<Simbolo>();
 
 			lt = Sintatic.CheckDollarSign(lt);
@@ -98,17 +78,30 @@ namespace LexicoSintatico
 							case Token.Terminals.INTEGER_T: // Adicao de Simbolo
 							case Token.Terminals.FLOAT_T: // Adicao de Simbolo
 							case Token.Terminals.STRING_T: // Adicao de Simbolo
-								success = CurrentContext.AddSimbolo(lt[i + 1].s, token.t);
-								if (!success)
+								if (i == 0)
 								{
-									SetErrorMessage(last, token.s);
-									return false;
+									success = CurrentContext.AddSimbolo(lt[i + 1].s, token.t);
+									if (!success)
+									{
+										SetErrorMessage(last, token.s, "Erro de Contexto: ");
+										return false;
+									}
+									break;
+								}
+								if (!lt[i - 1].t.Equals(Token.Terminals.NEW))
+								{
+									success = CurrentContext.AddSimbolo(lt[i + 1].s, token.t);
+									if (!success)
+									{
+										SetErrorMessage(last, token.s, "Erro de Contexto: ");
+										return false;
+									}
 								}
 								break;
 							case Token.Terminals.BREAK:
 								if (!CurrentContext.ChecaSePodeTerBreak())
 								{
-									SetErrorMessage(last, token.s);
+									SetErrorMessage(last, token.s, "break na posição inválida");
 									return false;
 								}
 								break;
@@ -161,12 +154,13 @@ namespace LexicoSintatico
 									if (lt[j].a.Equals(Token.Attributes.ASSERT) |
 										lt[j].a.Equals(Token.Attributes.ARITMETHIC) |
 										lt[j].a.Equals(Token.Attributes.COMPARISON) |
+										lt[j].a.Equals(Token.Attributes.BRKTPARE) |
 										lt[j].t.Equals(tipo) |
 										tipo.Equals(tipo2))
 										continue;
 									if (lt[j].a.Equals(Token.Attributes.SEPARATOR))
 										break;
-									SetErrorMessage(nt, lt[j].s);
+									SetErrorMessage(nt, lt[j].s, "Operação com atributos inválidos: ");
 									return false;
 								}
 								break;
@@ -176,13 +170,22 @@ namespace LexicoSintatico
 						if (!nt.Equals(NonTerminal.EMPTY))
 							last = nt;
 						Simbolo key = new Simbolo { Nonterminal = nt, Terminal = token.t };
-						newItems = Sintatic.ReferenceTable[key];
+						if (!nt.Equals(NonTerminal.ATREXP) | !token.t.Equals(Token.Terminals.IDENT))
+							newItems = Sintatic.ReferenceTable[key];
+						else
+						{
+							if (lt[i + 1].t.Equals(Token.Terminals.OPENPARENT))
+								newItems.Add(new Simbolo { Nonterminal = NonTerminal.FUNCCALL, Terminal = Token.Terminals.EMPTY });
+							else
+								newItems = Sintatic.ReferenceTable[key];
+						}
 
 						if (newItems[0].Terminal.Equals(Token.Terminals.EMPTY) &&
 							newItems[0].Nonterminal.Equals(NonTerminal.EMPTY))
 							newItems.Reverse();
 						else
 						{
+							newItems.Reverse();
 							foreach (Simbolo p in newItems)
 							{
 								pilha.Push(p);
@@ -192,23 +195,113 @@ namespace LexicoSintatico
 					}
 				}
 			}
+			return false;
 		}
+
+		public void SetErrorMessage(NonTerminal nt, string t, string message)
+		{
+			Error = message + "No não terminal: " + nt.ToString() + " com a entrada: " + t;
+		}
+
 		private class Contexto
 		{
-			public string LabelPai { get; set; }
-			public string LabelFim { get; set; }
+			private Dictionary<string, (string, Token.Terminals)> TabelaDeSimbolos { get; set; }
 			public List<Contexto> SubContextos { get; set; }
 			public Contexto ContextoPai { get; set; }
-			public bool IsLoop { get; set; }
+			private bool IsLoop { get; set; }
+			public List<Token.Terminals> TerminalDoContexto { get; set; }
+			public bool FechaContextoDoPai { get; set; }
 
-			public Contexto(Contexto pai = null, string labelpai = "", bool isloop = false)
+			public Contexto(Token.Terminals terminal, bool loop = false, Contexto pai = null)
 			{
-				LabelPai = labelpai;
+				TabelaDeSimbolos = new Dictionary<string, (string, Token.Terminals)>();
 				SubContextos = new List<Contexto>();
 				ContextoPai = pai;
-				IsLoop = isloop;
+				if (pai != null)
+					IsLoop = loop | pai.ChecaSePodeTerBreak();
+				else
+					IsLoop = loop;
+				TerminalDoContexto = new List<Token.Terminals>();
+				TerminalDoContexto.Add(terminal);
+				FechaContextoDoPai = false;
+			}
+
+			public bool ChecaSeTemSimbolo(string simbolo)
+			{
+				if (TabelaDeSimbolos.ContainsKey(simbolo))
+					return true;
+
+				if (ContextoPai != null)
+					if (ContextoPai.ChecaSeTemSimbolo(simbolo))
+						return true;
+
+				return false;
+			}
+
+			public bool ChecaSePodeTerBreak()
+			{
+				return IsLoop;
+			}
+
+			public bool AddSimbolo(string simbolo, Token.Terminals tipo)
+			{
+				if (ChecaSeTemSimbolo(simbolo))
+					return false;
+				TabelaDeSimbolos.Add(simbolo, (simbolo, tipo));
+				return true;
+			}
+
+			public Token.Terminals PegaTipoDoSimbolo(string simbolo)
+			{
+				if (this.TabelaDeSimbolos.ContainsKey(simbolo))
+					return this.TabelaDeSimbolos[simbolo].Item2;
+				else if (this.ContextoPai != null)
+					return this.ContextoPai.PegaTipoDoSimbolo(simbolo);
+				return Token.Terminals.ERROR;
+			}
+
+			public bool ChecaSeSimboloETipoBatem(string simbolo, Token.Terminals tipo)
+			{
+				if (!ChecaSeTemSimbolo(simbolo))
+				{
+					return false;
+				}
+
+				if (TabelaDeSimbolos[simbolo].Item1 == simbolo && TabelaDeSimbolos[simbolo].Item2 == tipo)
+				{
+					return true;
+				}
+				return false;
+			}
+
+			public Contexto CriaContexto(Token.Terminals terminal, bool isloop = false)
+			{
+				bool t = isloop | IsLoop;
+				var contexto = new Contexto(terminal, t, this);
+
+				SubContextos.Add(contexto);
+
+				return contexto;
+			}
+
+			public bool ChecaSeEhTerminalDoContexto(Token.Terminals term)
+			{
+				return TerminalDoContexto.Contains(term);
+			}
+
+			public void Print(StreamWriter sr)
+			{
+				if (this.TabelaDeSimbolos.Count > 0)
+					sr.WriteLine("Tabela de Símbolos ");
+				foreach (var tab in this.TabelaDeSimbolos)
+				{
+					sr.WriteLine("Id = " + tab.Value.Item1.ToString() + " Tipo = " + tab.Value.Item2.ToString());
+				}
+				foreach (var filho in this.SubContextos)
+					filho.Print(sr);
 			}
 		}
 	}
+
+
 }
-*/

@@ -37,11 +37,7 @@ namespace LexicoSintatico
 			{
 				sr.WriteLine("Entrada Nao Aceita");
 
-				sr.WriteLine(Sintatic.message_error);
-				sr.WriteLine("\nProduções possíveis:");
-				sr.WriteLine(Sintatic.sentence_hint);
-				sr.WriteLine("\nSímbolos esperados:");
-				sr.WriteLine(Sintatic.first_expected);
+				sr.WriteLine(Error);
 			}
 
 		}
