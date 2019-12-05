@@ -12,12 +12,12 @@ namespace LexicoSintatico
 
 	public class Semantico
 	{
-		Arvore<Terminals> Arvore;
+		Arvore<Simbolo> Arvore;
 		Sintatico SintaticoAux;
 		List<Tok> Lt;
 		public Semantico(List<Tok> lt)
 		{
-			Arvore = new Arvore<Terminals>();
+			Arvore = new Arvore<Simbolo>();
 			SintaticoAux = new Sintatico();
 			Lt = lt;
 			MontarArvore();
@@ -33,13 +33,12 @@ namespace LexicoSintatico
 
 		public void MontarArvore()
 		{
-			Stack<Simbolo> pilha = new Stack<Simbolo>();
-			Arvore.Raiz = new Arvore<Terminals>.Nodo<Terminals>(Terminals.EMPTY);
-			var atual = Arvore.Raiz;
+			Simbolo t = new Simbolo();
+			t.Terminal = Terminals.EMPTY;
+			t.Nonterminal = NonTerminal.PROGRAM;
+			Arvore.Raiz = new Nodo<Simbolo>(t);
+			Nodo<Simbolo> atual = Arvore.Raiz;
 
-			Lt = SintaticoAux.CheckDollarSign(Lt);
-			pilha.Push(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.DOLLAR });
-			pilha.Push(new Simbolo { Nonterminal = NonTerminal.PROGRAM, Terminal = Token.Terminals.EMPTY });
 			foreach (var token in Lt)
 			{
 				bool searchingTerminal = true;
@@ -47,42 +46,45 @@ namespace LexicoSintatico
 				{
 					List<Simbolo> newItems = new List<Simbolo>();
 					newItems.Clear();
-					if (token.t.Equals(pilha.Peek().Terminal))
+					if (token.t.Equals(atual.Dado.Terminal))
 					{
-						pilha.Pop();
+						atual = atual.Pai;
 						searchingTerminal = false;
-						atual.AddFilho(token.t);
-						
-						if (token.s == "$")
-							return;
+					}
+					else if (atual.Dado.Nonterminal.Equals(NonTerminal.EMPTY))
+					{
+						atual = atual.Pai.Pai.PegaFilho();
 					}
 					else //NonTerminal para trocar
 					{
-						NonTerminal nt = pilha.Pop().Nonterminal;
+						NonTerminal nt = atual.Dado.Nonterminal;
 						Simbolo key = new Simbolo { Nonterminal = nt, Terminal = token.t };
+
 						newItems = SintaticoAux.ReferenceTable[key];
-						if (newItems[0].Terminal.Equals(Token.Terminals.EMPTY)
-							&& newItems[0].Nonterminal.Equals(NonTerminal.EMPTY))
-							newItems.Reverse();
-						else
+
+						if (!(newItems[0].Terminal.Equals(Token.Terminals.EMPTY)
+							&& newItems[0].Nonterminal.Equals(NonTerminal.EMPTY)))
 						{
-							newItems.Reverse();
-							foreach (Simbolo p in newItems)
-							{
-								atual.AddFilho(Terminals.EMPTY);
-								pilha.Push(p);
-							}
+							atual.AddFilhos(newItems);
 							atual = atual.PegaFilho();
-							newItems.Reverse();//obrigatorio
 						}
 					}
+					var sr = new StreamWriter(Console.OpenStandardOutput())
+					{
+						AutoFlush = true
+					};
+					Console.SetOut(sr);
+					Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+
+					Arvore.PrintPosOrdem(sr);
 				}
 			}
 		}
 
 		public void WriteOutput(StreamWriter sr)
 		{
-			Arvore.PrintPosOrdem(sr);
+
 		}
 	}
 
