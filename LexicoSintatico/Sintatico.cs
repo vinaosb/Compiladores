@@ -920,7 +920,8 @@ namespace FormaisECompiladores
                         //grava saida nalista
                         if (recordExp)
                         {
-                            if (token.a.Equals(Token.Attributes.COMPARISON) || token.a.Equals(Token.Attributes.SEPARATOR))
+                            if (token.a.Equals(Token.Attributes.COMPARISON) || token.a.Equals(Token.Attributes.SEPARATOR)
+                                || token.t.Equals(Token.Terminals.OPENBRACE) || token.t.Equals(Token.Terminals.ASSERT))
                             {
                                 recordExp = false;
                                 //insere na lista de exp
