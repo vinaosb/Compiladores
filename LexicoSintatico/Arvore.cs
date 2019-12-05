@@ -11,13 +11,12 @@ namespace LexicoSintatico
 		public class Nodo<U>
 		{
 			public U Dado { get; set; }
-			public Nodo<U> Direita { get; set; }
-			public Nodo<U> Esquerda { get; set; }
+			public LinkedList<Nodo<U>> Filhos { get; set; }
 			public Nodo<U> Pai { get; set; }
 			public Nodo(U dado, Nodo<U> pai = null)
 			{
 				Dado = dado;
-				Esquerda = Direita = null;
+				Filhos = new LinkedList<Nodo<U>>();
 				Pai = pai;
 			}
 
@@ -25,9 +24,23 @@ namespace LexicoSintatico
 			{
 				if (nodo == null)
 					return;
-				PrintPosOrdem(nodo.Esquerda, sr);
-				PrintPosOrdem(nodo.Direita, sr);
-				sr.Write(nodo.Dado.ToString());
+				foreach (var filho in Filhos)
+				{
+					PrintPosOrdem(filho, sr);
+				}
+				sr.Write(nodo.Dado.ToString() + " ");
+			}
+
+			public bool ContemDado(Nodo<U> nodo, U dado)
+			{
+				if (nodo == null)
+					return false;
+				if (dado.Equals(Dado))
+					return true;
+				foreach (var filho in Filhos)
+					if(ContemDado(filho,dado))
+						return true;
+				return false;
 			}
 		}
 
@@ -49,6 +62,11 @@ namespace LexicoSintatico
 		public void PrintPosOrdem(StreamWriter sr)
 		{
 			Raiz.PrintPosOrdem(Raiz, sr);
+		}
+
+		public bool ContemDado(T dado)
+		{
+			return Raiz.ContemDado(Raiz, dado);
 		}
 
 	}

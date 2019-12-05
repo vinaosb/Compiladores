@@ -2,131 +2,59 @@
 using System.Collections.Generic;
 using System.Text;
 using FormaisECompiladores;
+using static FormaisECompiladores.Sintatico;
 
 namespace LexicoSintatico
 {
 	public class Semantico
 	{
-		
-	}
-
-	public class SDT
-	{
-		public class Node<T>
+		Arvore<Simbolo> ArvoreSimbolos;
+		Sintatico SintaticoAux;
+		Arvore<Token.Terminals> Contexto;
+		public Semantico()
 		{
-			public string Operacao { get; set; }
-			public Node<T> Herdado { get; set; }
-			public Node<T> Direita { get; set; }
-			public Node<T> Sintetizado { get; set; }
-			public T Valor { get; set; }
-			public Node(string op = "", Node<T> esq = null, Node<T> dir = null, T val = default)
-			{
-				Operacao = op;
-				Herdado = esq;
-				Direita = dir;
-				Valor = val;
-			}
-
-			public void Sintetizar()
-			{
-				switch (Operacao)
-				{
-					case "+":
-						Sintetizado = Direita.Sintetizado;
-						Herdado.Valor = Soma(Sintetizado.Valor, Direita.Valor);
-						break;
-					case "-":
-						Sintetizado = Direita.Sintetizado;
-						Herdado.Valor = Diferenca(Sintetizado.Valor, Direita.Valor);
-						break;
-					case "*":
-						Sintetizado = Direita.Sintetizado;
-						Herdado.Valor = Multiplica(Sintetizado.Valor, Direita.Valor);
-						break;
-					case "/":
-						Sintetizado = Direita.Sintetizado;
-						Herdado.Valor = Divide(Sintetizado.Valor, Direita.Valor);
-						break;
-					case "%":
-						Sintetizado = Direita.Sintetizado;
-						Herdado.Valor = Mod(Sintetizado.Valor, Direita.Valor);
-						break;
-					default:
-						Sintetizado = Herdado;
-						break;
-				}
-			}
-
-			private T Soma(T i, T j)
-			{
-				dynamic a = i;
-				dynamic b = j;
-				if (b == null)
-					return i;
-				return (T) a + b;
-			}
-			private T Diferenca(T i, T j)
-			{
-				dynamic a = i;
-				dynamic b = j;
-				if (b == null)
-					return -a;
-				return (T) a - b;
-			}
-			private T Multiplica(T i, T j)
-			{
-				dynamic a = i;
-				dynamic b = j;
-				return (T) a * b;
-			}
-			private T Divide(T i, T j)
-			{
-				dynamic a = i;
-				dynamic b = j;
-				return (T) a / b;
-			}
-			private T Mod(T i, T j)
-			{
-				dynamic a = i;
-				dynamic b = j;
-				return (T) a % b;
-			}
+			ArvoreSimbolos = new Arvore<Simbolo>();
+			SintaticoAux = new Sintatico();
 		}
 	}
 
 	public class Contexto
 	{
-		private Dictionary<string, (string, Token.Attributes)> TabelaDeSimbolos { get; set; }
+		private Dictionary<string, (string, Token.Terminals)> TabelaDeSimbolos { get; set; }
 		public List<Contexto> SubContextos { get; set; }
 		public Contexto ContextoPai { get; set; }
 		private bool IsLoop { get; set; }
+		public List<Token.Terminals> TerminalDoContexto { get; set; }
+		public bool FechaContextoDoPai { get; set; }
 
-		public Contexto(bool loop = false, Contexto pai = null)
+		public Contexto(Token.Terminals terminal, bool loop = false, Contexto pai = null)
 		{
-			TabelaDeSimbolos = new Dictionary<string, (string, Token.Attributes)>();
+			TabelaDeSimbolos = new Dictionary<string, (string, Token.Terminals)>();
 			SubContextos = new List<Contexto>();
 			ContextoPai = pai;
-			IsLoop = loop;
+			IsLoop = loop | pai.ChecaSePodeTerBreak();
+			TerminalDoContexto = new List<Token.Terminals>();
+			TerminalDoContexto.Add(terminal);
+			FechaContextoDoPai = false;
 		}
 
 		public bool ChecaSeTemSimbolo(string simbolo)
 		{
 			if (TabelaDeSimbolos.ContainsKey(simbolo))
 				return true;
-			foreach (var sub in SubContextos)
-			{
-				if (sub.ChecaSeTemSimbolo(simbolo))
-					return true;
-			}
+
+			if (ContextoPai != null & ContextoPai.ChecaSeTemSimbolo(simbolo))
+				return true;
+
 			return false;
 		}
 
-		public bool ChecaSeTemBreak()
+		public bool ChecaSePodeTerBreak()
 		{
-			return TabelaDeSimbolos.ContainsKey("break") && IsLoop;
+			return IsLoop;
 		}
 
-		public bool AddSimbolo(string simbolo, Token.Attributes tipo)
+		public bool AddSimbolo(string simbolo, Token.Terminals tipo)
 		{
 			if (ChecaSeTemSimbolo(simbolo))
 				return false;
@@ -134,7 +62,12 @@ namespace LexicoSintatico
 			return true;
 		}
 
-		public bool ChecaSeSimboloETipoBatem(string simbolo, Token.Attributes tipo)
+		public Token.Terminals PegaTipoDoSimbolo(string simbolo)
+		{
+			return TabelaDeSimbolos[simbolo].Item2;
+		}
+
+		public bool ChecaSeSimboloETipoBatem(string simbolo, Token.Terminals tipo)
 		{
 			if (!ChecaSeTemSimbolo(simbolo))
 			{
@@ -148,13 +81,19 @@ namespace LexicoSintatico
 			return false;
 		}
 
-		public Contexto CriaContexto(bool isLoop = false)
+		public Contexto CriaContexto(Token.Terminals terminal, bool isloop = false)
 		{
-			var contexto = new Contexto(isLoop, this);
+			bool t = isloop | IsLoop;
+			var contexto = new Contexto(terminal, t, this);
 
 			SubContextos.Add(contexto);
 
 			return contexto;
+		}
+
+		public bool ChecaSeEhTerminalDoContexto(Token.Terminals term)
+		{
+			return TerminalDoContexto.Contains(term);
 		}
 	}
 }
