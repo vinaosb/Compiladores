@@ -927,7 +927,6 @@ namespace FormaisECompiladores
 						Simbolo key = new Simbolo { Nonterminal = nt, Terminal = token.t };
                         try
 						{
-
 							if (!nt.Equals(NonTerminal.ATREXP) | !token.t.Equals(Token.Terminals.IDENT))
 								newItems = ReferenceTable[key];
 							else
@@ -956,31 +955,6 @@ namespace FormaisECompiladores
 							newItems.Reverse();//obrigatorio
 						}
 					}
-					/*
-					string st = "";
-					foreach (var p in pilha)
-					{
-						if (p.Nonterminal.Equals(NonTerminal.EMPTY))
-						{
-							if (p.Terminal.Equals(Token.Terminals.IDENT))
-							{
-								st += p.Terminal + " ";
-								continue;
-							}
-							foreach (var t in toks)
-							{
-								if (t.t.Equals(p.Terminal))
-								{
-									st += t.s + " ";
-									break;
-								}
-							}
-						}
-						else
-							st += p.Nonterminal + " ";
-					}*/
-                    //Console.WriteLine(st + "  | " + output);
-                    //sr.WriteLine(String.Format("|{0,150}|{1,150}|", st, output));
 
                     if (!exit)
 						return false;
