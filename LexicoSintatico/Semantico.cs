@@ -20,7 +20,7 @@ namespace LexicoSintatico
 			Arvore = new Arvore<Simbolo>();
 			SintaticoAux = new Sintatico();
 			Lt = lt;
-			MontarArvore();
+			//MontarArvore();
 		}
 
 		public bool PodeTerBreak(Nodo<Simbolo> nodo)

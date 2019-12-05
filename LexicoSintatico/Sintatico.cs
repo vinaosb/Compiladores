@@ -20,7 +20,7 @@ namespace FormaisECompiladores
         public string message_error = "";
         public string sentence_hint = "";
         public string first_expected = "";
-
+        public List<string> listExpa;
 
         public enum NonTerminal
 		{
@@ -607,7 +607,7 @@ namespace FormaisECompiladores
 						lp = new List<Simbolo>();
 						lp.Clear();
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.OPENPARENT });
-						lp.Add(new Simbolo { Nonterminal = NonTerminal.EXPRESSION, Terminal = Token.Terminals.EMPTY });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.NUMEXPRESSION, Terminal = Token.Terminals.EMPTY });
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.CLOSEPARENT });
 						llp.Add(lp);
 						break;
@@ -894,13 +894,14 @@ namespace FormaisECompiladores
 			string output = "";
 			bool exit = true;
 			Stack<Simbolo> pilha = new Stack<Simbolo>();
-
-
-			//sr.WriteLine("");
-			//sr.WriteLine("Parser: (Pilha)");
-			//sr.WriteLine(String.Format("|{0,-150}|{1,-150}|", "Stack", "Matched"));
-			//sr.WriteLine(String.Format("|{0,150}|{0,150}|", "PROGRAM $"));
-			toks = CheckDollarSign(toks);
+            listExpa = new List<string>();
+            string signal = "", expa = "";
+            bool recordExp = false;
+            //sr.WriteLine("");
+            //sr.WriteLine("Parser: (Pilha)");
+            //sr.WriteLine(String.Format("|{0,-150}|{1,-150}|", "Stack", "Matched"));
+            //sr.WriteLine(String.Format("|{0,150}|{0,150}|", "PROGRAM $"));
+            toks = CheckDollarSign(toks);
 			pilha.Push(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.DOLLAR });
 			pilha.Push(new Simbolo { Nonterminal = NonTerminal.PROGRAM, Terminal = Token.Terminals.EMPTY });
 			foreach (var token in toks)
@@ -908,13 +909,33 @@ namespace FormaisECompiladores
 				bool searchingTerminal = true;
 				while (searchingTerminal)
 				{
-					List<Simbolo> newItems = new List<Simbolo>();
+                   
+
+                    List<Simbolo> newItems = new List<Simbolo>();
 					newItems.Clear();
 					if (token.t.Equals(pilha.Peek().Terminal))
 					{
 						pilha.Pop();
 						searchingTerminal = false;
-						output += token.s + " ";
+                        //grava saida nalista
+                        if (recordExp)
+                        {
+                            if (token.a.Equals(Token.Attributes.COMPARISON) || token.a.Equals(Token.Attributes.SEPARATOR))
+                            {
+                                recordExp = false;
+                                //insere na lista de exp
+                                listExpa.Add(expa);
+                                expa = "";//limpa para a prox expa
+                            }
+                            else
+                            {
+                                if (signal != "")
+                                    expa = expa + signal;
+                                else
+                                    expa = expa + token.s;
+                            }
+                        }
+                        output += token.s + " ";
 						if (token.s == "$")
 							return true;
 					}
@@ -932,7 +953,19 @@ namespace FormaisECompiladores
 					else //NonTerminal para trocar
 					{
 						NonTerminal nt = pilha.Pop().Nonterminal;
-						Simbolo key = new Simbolo { Nonterminal = nt, Terminal = token.t };
+                        //if nt = NUMEXPRESSION start saving
+                        if (nt.Equals(NonTerminal.NUMEXPRESSION))
+                            recordExp = true;
+                        //if nt = EXP2 stop saving
+                        if (nt.Equals(NonTerminal.EXP2))
+                        {
+                            recordExp = false;
+                            //insere na lista de exp
+                            listExpa.Add(expa);
+                            expa = "";//limpa para a prox expa
+                        }
+
+                        Simbolo key = new Simbolo { Nonterminal = nt, Terminal = token.t };
                         try{
                             newItems = ReferenceTable[key];
                         }catch (Exception)
@@ -953,8 +986,23 @@ namespace FormaisECompiladores
 							newItems.Reverse();//obrigatorio
 						}
 					}
+                    if (newItems.Count == 2)
+                    {
+                        if (newItems[1].Nonterminal.Equals(NonTerminal.FACTOR))
+                        {
+                            if (newItems[0].Terminal.Equals(Token.Terminals.MINUS))
+                                signal = "NEG";
+                            else if (newItems[0].Terminal.Equals(Token.Terminals.ADD))
+                                signal = "POS";
+                            else signal = "";
+                        }
+                        else
+                            signal = "";
+                    }
+                    else
+                        signal = "";
 
-					string st = "";
+                    string st = "";
 					foreach (var p in pilha)
 					{
 						if (p.Nonterminal.Equals(NonTerminal.EMPTY))

@@ -172,7 +172,8 @@ namespace FormaisECompiladores
 				lt = t.ReadFile();
 			} while (lt == null);
 			Sintatico s = new Sintatico();
-			Semantico sem = new Semantico(lt);
+ 
+            Semantico sem = new Semantico(lt);
 
 			switch (outputMode)
 			{
@@ -263,8 +264,27 @@ namespace FormaisECompiladores
 					PrintSemantico(sem, exitMode);
 					break;
 			}
+            //######## PRINT DA ARVORE DE SINTAXE ##############
+            //precisa ter executado o WriteOutput do sintatico que faz o PredictiveParser
+            //ArvoreSintatica arvore = new ArvoreSintatica();
+            //string entry = "2*(3+a)+(b-(4/3))";
+            foreach (string exp in s.listExpa)
+            {
+                if ((exp.Contains("*") || exp.Contains("+") || exp.Contains("-") || exp.Contains("/") || exp.Contains("%"))
+                    && exp.Length>2)
+                {
+                    ArvoreSintatica arvore = new ArvoreSintatica();
+                    arvore.parseRegex(arvore.initialNodo(exp));
+                    string result = arvore.listTree();
+                    Console.WriteLine("Arvore de Sintaxe, formato raiz-esquerda-direita:");
+                    Console.WriteLine(result);
+                }
+            }
+            Console.Read();
 
-			Console.Out.WriteLine("\n\n###Fim de processo###");
+            //######## FIM PRINT DA ARVORE DE SINTAXE ##############
+
+            Console.Out.WriteLine("\n\n###Fim de processo###");
 			Console.ReadKey();
 			Console.Out.Close();
 
