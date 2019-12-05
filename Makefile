@@ -7,13 +7,13 @@ install :
 	bash -c "sudo snap alias dotnet-sdk.dotnet dotnet"
 
 cleanup:
-	dotnet clean LexicoSintatico/
+	dotnet-sdk.dotnet clean LexicoSintatico/
  
 restore:
-	dotnet restore LexicoSintatico/
+	dotnet-sdk.dotnet restore LexicoSintatico/
  
 build:
-	dotnet build LexicoSintatico/
+	dotnet-sdk.dotnet build LexicoSintatico/
  
 run:
-	dotnet run -p LexicoSintatico/LexicoSintatico.csproj
+	dotnet-sdk.dotnet run -p LexicoSintatico/LexicoSintatico.csproj
