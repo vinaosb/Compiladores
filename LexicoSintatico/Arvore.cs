@@ -36,6 +36,16 @@ namespace LexicoSintatico
 			Raiz = null;
 		}
 
+		public Arvore(Nodo<T> nodo)
+		{
+			Raiz = nodo;
+		}
+
+		public Arvore(T dado)
+		{
+			Raiz = new Nodo<T>(dado);
+		}
+
 		public void PrintPosOrdem(StreamWriter sr)
 		{
 			Raiz.PrintPosOrdem(Raiz, sr);
