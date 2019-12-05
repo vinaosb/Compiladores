@@ -31,6 +31,6 @@ Para realizar o run depois basta realizar o comando "make run"
 O programa irá criar uma subpasta -> bin/Debug/netcoreapp2.1/
 Nessa pasta deverá estar localizado os arquivos .ccc para teste.
 
-Quando o programa for aberto ele irá perguntar se o usuário quer ver apenas a Analise Lexica, a Analise Sintatica ou ambas.
+Quando o programa for aberto ele irá perguntar se o usuário quer ver apenas a Analise Lexica, a Analise Sintatica, a Análise Semantica ou uma combinacao acima.
 Depois perguntara se quer que a saida seja feita em um arquivo ou no proprio console.
 Caso for feita em arquivo, ele ira gerar um arquivo para cada analise no formato .txt.

@@ -125,9 +125,13 @@ namespace FormaisECompiladores
 		{
 			Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-			Console.Out.WriteLine("Digite 0 para ver a Análise Léxica e Sintática");
-			Console.Out.WriteLine("Digite 1 para ver apenas a Análise Léxica");
-			Console.Out.WriteLine("Digite 2 para ver apenas a Análise Sintática");
+			Console.Out.WriteLine("Digite 0 para ver a Análise Léxica, Sintática e Semântica");
+			Console.Out.WriteLine("Digite 1 para ver apenas a Análise Léxica e Sintática");
+			Console.Out.WriteLine("Digite 2 para ver apenas a Análise Léxica e Semântica");
+			Console.Out.WriteLine("Digite 3 para ver apenas a Análise Sintática e Semântica");
+			Console.Out.WriteLine("Digite 4 para ver apenas a Análise Léxica");
+			Console.Out.WriteLine("Digite 5 para ver apenas a Análise Sintática");
+			Console.Out.WriteLine("Digite 6 para ver apenas a Análise Semântica");
 			Console.Out.WriteLine("Default = 0");
 			Output outputMode;
 			try
