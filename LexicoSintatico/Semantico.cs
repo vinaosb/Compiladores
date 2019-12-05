@@ -158,6 +158,7 @@ namespace LexicoSintatico
 									if (lt[j].a.Equals(Token.Attributes.ASSERT) |
 										lt[j].a.Equals(Token.Attributes.ARITMETHIC) |
 										lt[j].a.Equals(Token.Attributes.COMPARISON) |
+										lt[j].a.Equals(Token.Attributes.BRKTPARE) |
 										lt[j].t.Equals(tipo) |
 										tipo.Equals(tipo2))
 										continue;
