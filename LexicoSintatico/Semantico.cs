@@ -257,11 +257,10 @@ namespace LexicoSintatico
 
 			public Token.Terminals PegaTipoDoSimbolo(string simbolo)
 			{
-				Token.Terminals ret;
 				if (this.TabelaDeSimbolos.ContainsKey(simbolo))
-					ret = this.TabelaDeSimbolos[simbolo].Item2;
+					return this.TabelaDeSimbolos[simbolo].Item2;
 				else if (this.ContextoPai != null)
-					ret = this.ContextoPai.PegaTipoDoSimbolo(simbolo); 
+					return this.ContextoPai.PegaTipoDoSimbolo(simbolo); 
 				return Token.Terminals.ERROR;
 			}
 
