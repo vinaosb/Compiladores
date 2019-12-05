@@ -1,6 +1,7 @@
 def programa1()
 {
 	int integeable;
+	integeable = programa1();
 	int naoehstring;
 	float doubleable;
 	float issoehfloat;
@@ -123,5 +124,4 @@ def programa1()
 	byebyeCode = 0;
 	return;
 	}
-	programa1();
 }

@@ -925,8 +925,19 @@ namespace FormaisECompiladores
 					{
 						NonTerminal nt = pilha.Pop().Nonterminal;
 						Simbolo key = new Simbolo { Nonterminal = nt, Terminal = token.t };
-                        try{
-                            newItems = ReferenceTable[key];
+                        try
+						{
+
+							if (!nt.Equals(NonTerminal.ATREXP) | !token.t.Equals(Token.Terminals.IDENT))
+								newItems = ReferenceTable[key];
+							else
+							{
+								if (toks[toks.IndexOf(token) + 1].t.Equals(Token.Terminals.OPENPARENT))
+									newItems.Add(new Simbolo { Nonterminal = NonTerminal.FUNCCALL, Terminal = Token.Terminals.EMPTY });
+								else
+									newItems = ReferenceTable[key];
+							}
+
                         }catch (Exception)
                         {
                             setErrorMessage(nt, token.s);

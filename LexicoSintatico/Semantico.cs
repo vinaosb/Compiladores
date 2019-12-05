@@ -173,7 +173,15 @@ namespace LexicoSintatico
 						if (!nt.Equals(NonTerminal.EMPTY))
 							last = nt;
 						Simbolo key = new Simbolo { Nonterminal = nt, Terminal = token.t };
-						newItems = Sintatic.ReferenceTable[key];
+						if (!nt.Equals(NonTerminal.ATREXP) | !token.t.Equals(Token.Terminals.IDENT))
+							newItems = Sintatic.ReferenceTable[key];
+						else
+						{
+							if (lt[i + 1].t.Equals(Token.Terminals.OPENPARENT))
+								newItems.Add(new Simbolo { Nonterminal = NonTerminal.FUNCCALL, Terminal = Token.Terminals.EMPTY });
+							else
+								newItems = Sintatic.ReferenceTable[key];
+						}
 
 						if (newItems[0].Terminal.Equals(Token.Terminals.EMPTY) &&
 							newItems[0].Nonterminal.Equals(NonTerminal.EMPTY))

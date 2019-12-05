@@ -3,6 +3,8 @@
 	{
 		int V;
 
+		V = programa3();
+
 		int adj[10];
 
 		string Graph;
@@ -139,5 +141,4 @@
 
 		return;
 	}
-	programa3();
 }

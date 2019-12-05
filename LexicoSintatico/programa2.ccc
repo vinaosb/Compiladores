@@ -2,6 +2,8 @@
 {
 	{
 		int i;
+		
+		i = programa2();
 		int j;
 		int min_idx; 
 
@@ -124,5 +126,4 @@
 		swap = a + b; 
 		return; 
 	}
-	programa2();
 }
