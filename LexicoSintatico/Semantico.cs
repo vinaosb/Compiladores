@@ -53,14 +53,22 @@ namespace LexicoSintatico
 					}
 					else if (atual.Dado.Nonterminal.Equals(NonTerminal.EMPTY))
 					{
-						atual = atual.Pai.Pai.PegaFilho();
+						atual = atual.Pai;
 					}
 					else //NonTerminal para trocar
 					{
 						NonTerminal nt = atual.Dado.Nonterminal;
 						Simbolo key = new Simbolo { Nonterminal = nt, Terminal = token.t };
 
-						newItems = SintaticoAux.ReferenceTable[key];
+						try
+						{
+							newItems = SintaticoAux.ReferenceTable[key];
+						}
+						catch (Exception)
+						{
+							atual = atual.Pai.PegaFilho();
+							continue;
+						}
 
 						if (!(newItems[0].Terminal.Equals(Token.Terminals.EMPTY)
 							&& newItems[0].Nonterminal.Equals(NonTerminal.EMPTY)))
