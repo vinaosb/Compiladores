@@ -371,7 +371,7 @@ namespace FormaisECompiladores
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.EMPTY });
 						llp.Add(lp);
 						break;
-					// FORSTAT -> for( ATRIBSTAT; NUMEXPRESSION; ATRIBSTAT) STATEMENT
+					// FORSTAT -> for( ATRIBSTAT; EXPRESSION; ATRIBSTAT) STATEMENT
 					case NonTerminal.FORSTAT:
 						lp = new List<Simbolo>();
 						lp.Clear();
