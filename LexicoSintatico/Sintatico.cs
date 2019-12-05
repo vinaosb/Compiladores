@@ -138,9 +138,9 @@ namespace FormaisECompiladores
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.OPENPARENT });
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.PARAMLIST, Terminal = Token.Terminals.EMPTY });
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.CLOSEPARENT });
-						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.OPENBRKT });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.OPENBRACE });
 						lp.Add(new Simbolo { Nonterminal = NonTerminal.STATELIST, Terminal = Token.Terminals.EMPTY });
-						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.CLOSEBRKT });
+						lp.Add(new Simbolo { Nonterminal = NonTerminal.EMPTY, Terminal = Token.Terminals.CLOSEBRACE });
 						llp.Add(lp);
 						break;
 					// PARAMLIST -> int ident PARAMLIST2 | float ident PARAMLIST2 | string ident PARAMLIST2 | &
@@ -945,7 +945,7 @@ namespace FormaisECompiladores
 							newItems.Reverse();//obrigatorio
 						}
 					}
-
+					/*
 					string st = "";
 					foreach (var p in pilha)
 					{
@@ -967,7 +967,7 @@ namespace FormaisECompiladores
 						}
 						else
 							st += p.Nonterminal + " ";
-					}
+					}*/
                     //Console.WriteLine(st + "  | " + output);
                     //sr.WriteLine(String.Format("|{0,150}|{1,150}|", st, output));
 

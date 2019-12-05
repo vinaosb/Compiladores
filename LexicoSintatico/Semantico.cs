@@ -12,6 +12,7 @@ namespace LexicoSintatico
 		private List<Contexto> Contextos;
 		private Contexto CurrentContext;
 		private Sintatico Sintatic;
+		private string Error;
 		public Semantico()
 		{
 			Contextos = new List<Contexto>();
@@ -23,7 +24,15 @@ namespace LexicoSintatico
 		public void WriteOutput(List<Token.Tok> lt, StreamWriter sr)
 		{
 			if (Parser(lt))
-				sr.WriteLine("Entrada Aceita");
+			{
+				foreach (var c in Contextos)
+				{
+					c.Print(sr);
+				}
+				sr.WriteLine("Expressões Aritmeticas Válidas");
+				sr.WriteLine("Declaração de Variáveis por Escopo OK");
+				sr.WriteLine("'breaks' Válidos");
+			}
 			else
 			{
 				sr.WriteLine("Entrada Nao Aceita");
@@ -73,17 +82,30 @@ namespace LexicoSintatico
 							case Token.Terminals.INTEGER_T: // Adicao de Simbolo
 							case Token.Terminals.FLOAT_T: // Adicao de Simbolo
 							case Token.Terminals.STRING_T: // Adicao de Simbolo
-								success = CurrentContext.AddSimbolo(lt[i + 1].s, token.t);
-								if (!success)
+								if (i == 0)
 								{
-									SetErrorMessage(last,token.s);
-									return false;
+									success = CurrentContext.AddSimbolo(lt[i + 1].s, token.t);
+									if (!success)
+									{
+										SetErrorMessage(last,token.s, "Erro de Contexto: ");
+										return false;
+									}
+									break;
+								}
+								if (!lt[i - 1].t.Equals(Token.Terminals.NEW))
+								{
+									success = CurrentContext.AddSimbolo(lt[i + 1].s, token.t);
+									if (!success)
+									{
+										SetErrorMessage(last, token.s, "Erro de Contexto: ");
+										return false;
+									}
 								}
 								break;
 							case Token.Terminals.BREAK:
 								if (!CurrentContext.ChecaSePodeTerBreak())
 								{
-									SetErrorMessage(last,token.s);
+									SetErrorMessage(last,token.s, "break na posição inválida");
 									return false;
 								}
 								break;
@@ -141,7 +163,7 @@ namespace LexicoSintatico
 										continue;
 									if (lt[j].a.Equals(Token.Attributes.SEPARATOR))
 										break;
-									SetErrorMessage(nt, lt[j].s);
+									SetErrorMessage(nt, lt[j].s, "Operação com atributos inválidos: ");
 									return false;
 								}
 								break;
@@ -158,6 +180,7 @@ namespace LexicoSintatico
 							newItems.Reverse();
 						else
 						{
+							newItems.Reverse();
 							foreach (Simbolo p in newItems)
 							{
 								pilha.Push(p);
@@ -170,29 +193,9 @@ namespace LexicoSintatico
 			return false;
 		}
 
-		public void SetErrorMessage(NonTerminal nt, string t)
+		public void SetErrorMessage(NonTerminal nt, string t, string message)
 		{
-			foreach (var productions in Sintatic.Producoes.GetValueOrDefault(nt))
-			{
-				string forma_sentencial = "";
-				foreach (Token.Terminals final_t in Sintatic.GetFirstFromProd(productions))
-				{
-					Sintatic.first_expected += final_t.ToString() + ",";
-				}
-				Sintatic.first_expected = Sintatic.first_expected.Replace("EMPTY", "ɛ");
-
-				foreach (var symbols in productions)
-				{
-					forma_sentencial += (
-						!symbols.Nonterminal.Equals(NonTerminal.EMPTY) ? symbols.Nonterminal.ToString() : (
-							!symbols.Terminal.Equals(Token.Terminals.EMPTY) ? symbols.Terminal.ToString() : "ɛ")
-					);
-					forma_sentencial += " ";
-				}
-
-				Sintatic.sentence_hint += nt + " -> " + forma_sentencial + "\n";
-			}
-			Sintatic.message_error = "Erro Semantico: Esperando: '" + nt + "' - Achado: '" + t + "'";
+			Error = message + "No não terminal: " + nt.ToString() + " com a entrada: " + t;
 		}
 
 		private class Contexto
@@ -209,7 +212,10 @@ namespace LexicoSintatico
 				TabelaDeSimbolos = new Dictionary<string, (string, Token.Terminals)>();
 				SubContextos = new List<Contexto>();
 				ContextoPai = pai;
-				IsLoop = loop | pai.ChecaSePodeTerBreak();
+				if (pai != null)
+					IsLoop = loop | pai.ChecaSePodeTerBreak();
+				else
+					IsLoop = loop;
 				TerminalDoContexto = new List<Token.Terminals>();
 				TerminalDoContexto.Add(terminal);
 				FechaContextoDoPai = false;
@@ -220,8 +226,9 @@ namespace LexicoSintatico
 				if (TabelaDeSimbolos.ContainsKey(simbolo))
 					return true;
 
-				if (ContextoPai != null & ContextoPai.ChecaSeTemSimbolo(simbolo))
-					return true;
+				if (ContextoPai != null)
+					if(ContextoPai.ChecaSeTemSimbolo(simbolo))
+						return true;
 
 				return false;
 			}
@@ -241,7 +248,12 @@ namespace LexicoSintatico
 
 			public Token.Terminals PegaTipoDoSimbolo(string simbolo)
 			{
-				return TabelaDeSimbolos[simbolo].Item2;
+				Token.Terminals ret;
+				if (this.TabelaDeSimbolos.ContainsKey(simbolo))
+					ret = this.TabelaDeSimbolos[simbolo].Item2;
+				else if (this.ContextoPai != null)
+					ret = this.ContextoPai.PegaTipoDoSimbolo(simbolo); 
+				return Token.Terminals.ERROR;
 			}
 
 			public bool ChecaSeSimboloETipoBatem(string simbolo, Token.Terminals tipo)
@@ -271,6 +283,18 @@ namespace LexicoSintatico
 			public bool ChecaSeEhTerminalDoContexto(Token.Terminals term)
 			{
 				return TerminalDoContexto.Contains(term);
+			}
+
+			public void Print(StreamWriter sr)
+			{
+				if (this.TabelaDeSimbolos.Count > 0)
+					sr.WriteLine("Tabela de Símbolos ");
+				foreach (var tab in this.TabelaDeSimbolos)
+				{
+					sr.WriteLine("Id = " + tab.Value.Item1.ToString() + " Tipo = " + tab.Value.Item2.ToString());
+				}
+				foreach (var filho in this.SubContextos)
+					filho.Print(sr);
 			}
 		}
 	}

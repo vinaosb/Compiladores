@@ -1,4 +1,4 @@
-﻿{
+﻿def abc(){{
 {
   float x;
   float z;
@@ -37,4 +37,6 @@
 
   return;
 }
+}
+	abc();
 }

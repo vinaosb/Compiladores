@@ -1,3 +1,4 @@
+def programa1()
 {
 	int integeable;
 	int naoehstring;
@@ -122,4 +123,5 @@
 	byebyeCode = 0;
 	return;
 	}
+	programa1();
 }

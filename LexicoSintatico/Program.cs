@@ -8,6 +8,7 @@
 //      - Marcelo José Dias (15205398)
 //      - Vinícius Schwinden Berkenbrock (16100751)
 //#################################################
+using LexicoSintatico;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,9 +19,13 @@ namespace FormaisECompiladores
 	{
 		enum Output
 		{
+			LexSinSem,
 			LexSin,
+			LexSem,
+			SinSem,
 			Lex,
-			Sin
+			Sin,
+			Sem
 		};
 
 		enum ExitMode
@@ -86,10 +91,37 @@ namespace FormaisECompiladores
 			}
 
 		}
-        
+
+		private static void PrintSemantico(Semantico s, List<Token.Tok> lt, ExitMode mode)
+		{
+			StreamWriter sr;
+			switch (mode)
+			{
+				case ExitMode.Console:
+					Console.Out.Write("\n\n######Analise Semantica######\n\n");
+					sr = new StreamWriter(Console.OpenStandardOutput())
+					{
+						AutoFlush = true
+					};
+					Console.SetOut(sr);
+					Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+					s.WriteOutput(lt, sr);
+					break;
+				default:
+					Console.Out.Write("Escrevendo AnaliseSemantica.txt\n\n");
+					sr = new StreamWriter(@"AnaliseSemantica.txt");
+					s.WriteOutput(lt, sr);
+					sr.Flush();
+					sr.Close();
+					break;
+			}
+
+		}
 
 
-            static void Main()
+
+		static void Main()
 		{
 			Console.OutputEncoding = System.Text.Encoding.UTF8;
 
@@ -136,16 +168,11 @@ namespace FormaisECompiladores
 				lt = t.ReadFile();
 			} while (lt == null);
 			Sintatico s = new Sintatico();
+			Semantico sem = new Semantico();
 
 			switch (outputMode)
 			{
-				case Output.Lex:
-					PrintLexico(t, exitMode);
-					break;
-				case Output.Sin:
-					PrintSintatico(s, lt, exitMode);
-					break;
-				default:
+				case Output.LexSin:
 					PrintLexico(t, exitMode);
 					Console.Out.Close();
 					StreamWriter sw = new StreamWriter(Console.OpenStandardOutput())
@@ -160,6 +187,76 @@ namespace FormaisECompiladores
 						Console.ReadKey();
 					}
 					PrintSintatico(s, lt, exitMode);
+					break;
+				case Output.LexSem:
+					PrintLexico(t, exitMode);
+					Console.Out.Close();
+					sw = new StreamWriter(Console.OpenStandardOutput())
+					{
+						AutoFlush = true
+					};
+					if (exitMode.Equals(ExitMode.Console))
+					{
+						Console.SetOut(sw);
+						Console.OutputEncoding = System.Text.Encoding.UTF8;
+						Console.Out.WriteLine("\n\nPressione uma tecla para continuar para o Semantico\n\n");
+						Console.ReadKey();
+					}
+					PrintSemantico(sem, lt, exitMode);
+					break;
+				case Output.SinSem:
+					PrintSintatico(s, lt, exitMode);
+					Console.Out.Close();
+					sw = new StreamWriter(Console.OpenStandardOutput())
+					{
+						AutoFlush = true
+					};
+					if (exitMode.Equals(ExitMode.Console))
+					{
+						Console.SetOut(sw);
+						Console.OutputEncoding = System.Text.Encoding.UTF8;
+						Console.Out.WriteLine("\n\nPressione uma tecla para continuar para o Semantico\n\n");
+						Console.ReadKey();
+					}
+					PrintSemantico(sem, lt, exitMode);
+					break;
+				case Output.Lex:
+					PrintLexico(t, exitMode);
+					break;
+				case Output.Sin:
+					PrintSintatico(s, lt, exitMode);
+					break;
+				case Output.Sem:
+					PrintSemantico(sem, lt, exitMode);
+					break;
+				default:
+					PrintLexico(t, exitMode);
+					Console.Out.Close();
+					sw = new StreamWriter(Console.OpenStandardOutput())
+					{
+						AutoFlush = true
+					};
+					if (exitMode.Equals(ExitMode.Console))
+					{
+						Console.SetOut(sw);
+						Console.OutputEncoding = System.Text.Encoding.UTF8;
+						Console.Out.WriteLine("\n\nPressione uma tecla para continuar para o Sintatico\n\n");
+						Console.ReadKey();
+					}
+					PrintSintatico(s, lt, exitMode);
+					Console.Out.Close();
+					sw = new StreamWriter(Console.OpenStandardOutput())
+					{
+						AutoFlush = true
+					};
+					if (exitMode.Equals(ExitMode.Console))
+					{
+						Console.SetOut(sw);
+						Console.OutputEncoding = System.Text.Encoding.UTF8;
+						Console.Out.WriteLine("\n\nPressione uma tecla para continuar para o Semantico\n\n");
+						Console.ReadKey();
+					}
+					PrintSemantico(sem, lt, exitMode);
 					break;
 			}
 

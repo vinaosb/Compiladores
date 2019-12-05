@@ -1,4 +1,5 @@
-﻿{
+﻿def programa3()
+{
 	{
 		int V;
 
@@ -138,4 +139,5 @@
 
 		return;
 	}
+	programa3();
 }
