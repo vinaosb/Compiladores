@@ -92,6 +92,35 @@ namespace FormaisECompiladores
 
 		}
 
+		private static void PrintArvoreSintatica(List<Token.Tok> lt, StreamWriter srX)
+		{
+			//######## PRINT DA ARVORE DE SINTAXE ##############
+
+			//ArvoreSintatica arvore = new ArvoreSintatica();
+
+			SintaticoX sX = new SintaticoX();
+			sX.PredictiveParser(lt);
+			srX.WriteLine("Imprimindo Arvores de Sintaxes no formato raiz-esquerda-direita");
+			int count = 0;
+			foreach (string exp in sX.listExpa)
+			{
+				if ((exp.Contains("*") || exp.Contains("+") || exp.Contains("-") || exp.Contains("/") || exp.Contains("%"))
+					&& exp.Length > 2)
+				{
+					count++;
+					ArvoreSintatica arvore = new ArvoreSintatica();
+					arvore.parseRegex(arvore.initialNodo(exp));
+					string result = arvore.listTree();
+					srX.WriteLine("Arvore de Sintaxe " + count + ":");
+					srX.WriteLine(result);
+					srX.WriteLine();
+				}
+			}
+
+			//######## FIM PRINT DA ARVORE DE SINTAXE ##############
+
+		}
+
 		private static void PrintSemantico(Semantico s, List<Token.Tok> lt, ExitMode mode)
 		{
 			StreamWriter sr;
@@ -106,11 +135,13 @@ namespace FormaisECompiladores
 					Console.SetOut(sr);
 					Console.OutputEncoding = System.Text.Encoding.UTF8;
 
+					PrintArvoreSintatica(lt, sr);
 					s.WriteOutput(lt, sr);
 					break;
 				default:
 					Console.Out.Write("Escrevendo AnaliseSemantica.txt\n\n");
 					sr = new StreamWriter(@"AnaliseSemantica.txt");
+					PrintArvoreSintatica(lt, sr);
 					s.WriteOutput(lt, sr);
 					sr.Flush();
 					sr.Close();
