@@ -15,7 +15,7 @@ using System.Text;
 
 namespace FormaisECompiladores
 {
-	public class Sintatico
+	public class SintaticoX
 	{
         public string message_error = "";
         public string sentence_hint = "";
@@ -77,7 +77,7 @@ namespace FormaisECompiladores
 		public Dictionary<NonTerminal, List<Token.Terminals>> first;
 		public Dictionary<NonTerminal, HashSet<Token.Terminals>> Follows { get; set; }
 
-		public Sintatico()
+		public SintaticoX()
 		{
 			Producoes = new Dictionary<NonTerminal, List<List<Simbolo>>>();
 			InitProd();
@@ -686,18 +686,20 @@ namespace FormaisECompiladores
 				//sr.WriteLine("{0},{1}->{2}", sy.Key.Nonterminal, sy.Key.Terminal, prod);
 			}
 
-			if (PredictiveParser(lt, sr))
-				sr.WriteLine("Entrada Aceita");
-			else
-			{
-				sr.WriteLine("Entrada Nao Aceita");
+            //if (
+                PredictiveParser(lt, sr);
+                //)
+			//	sr.WriteLine("Entrada Aceita");
+			//else
+			//{
+			//	sr.WriteLine("Entrada Nao Aceita");
 
-				sr.WriteLine(message_error);
-				sr.WriteLine("\nProduções possíveis:");
-				sr.WriteLine(sentence_hint);
-				sr.WriteLine("\nSímbolos esperados:");
-				sr.WriteLine(first_expected);
-			}
+			//	sr.WriteLine(message_error);
+			//	sr.WriteLine("\nProduções possíveis:");
+			//	sr.WriteLine(sentence_hint);
+			//	sr.WriteLine("\nSímbolos esperados:");
+			//	sr.WriteLine(first_expected);
+			//}
 
 
         }
@@ -897,8 +899,8 @@ namespace FormaisECompiladores
             listExpa = new List<string>();
             string signal = "", expa = "";
             bool recordExp = false;
-            NonTerminal stopPointNT = NonTerminal.EXP2;
-            Token.Terminals stopPointT = Token.Terminals.EMPTY;
+            //NonTerminal stopPointNT = NonTerminal.EXP2;
+            //Token.Terminals stopPointT = Token.Terminals.EMPTY;
             //sr.WriteLine("");
             //sr.WriteLine("Parser: (Pilha)");
             //sr.WriteLine(String.Format("|{0,-150}|{1,-150}|", "Stack", "Matched"));

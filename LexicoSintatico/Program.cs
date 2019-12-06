@@ -265,19 +265,26 @@ namespace FormaisECompiladores
 					break;
 			}
             //######## PRINT DA ARVORE DE SINTAXE ##############
-            //precisa ter executado o WriteOutput do sintatico que faz o PredictiveParser
+        
             //ArvoreSintatica arvore = new ArvoreSintatica();
-            //string entry = "2*(3+a)+(b-(4/3))";
-            foreach (string exp in s.listExpa)
+     
+            SintaticoX sX = new SintaticoX();
+            StreamWriter srX = new StreamWriter(Console.OpenStandardOutput());
+            sX.WriteOutput(lt,srX);
+            Console.WriteLine("Imprimindo Arvores de Sintaxes no formato raiz-esquerda-direita");
+            int count = 0;
+            foreach (string exp in sX.listExpa)
             {
                 if ((exp.Contains("*") || exp.Contains("+") || exp.Contains("-") || exp.Contains("/") || exp.Contains("%"))
                     && exp.Length>2)
                 {
+                    count++;
                     ArvoreSintatica arvore = new ArvoreSintatica();
                     arvore.parseRegex(arvore.initialNodo(exp));
                     string result = arvore.listTree();
-                    Console.WriteLine("Arvore de Sintaxe, formato raiz-esquerda-direita:");
+                    Console.WriteLine("Arvore de Sintaxe "+count+ ":");
                     Console.WriteLine(result);
+                    Console.WriteLine();
                 }
             }
             Console.Read();

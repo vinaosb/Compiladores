@@ -94,7 +94,7 @@
 				{
 					itr = adv[v][i];
 					if (vDegree[itr] >= k)
-						print(" -> " + itr);
+						print(itr);
 				}
 			}
 		}

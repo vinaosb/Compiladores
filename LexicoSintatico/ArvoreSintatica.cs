@@ -194,8 +194,20 @@ namespace LexicoSintatico
             result = "";
             indicador = 1;
             readNodo(raiz);
+            //cleanText(result);
+            result = result.Replace(")", "");
+            result = result.Replace("(", "");
+            result = result.Replace("}", "");
+            result = result.Replace("{", "");
             return result;
         }
+        //public void cleanText(String str)
+        //{
+        //    result = result.Replace(")", "");
+        //    result = result.Replace("(", "");
+        //    result = result.Replace("}", "");
+        //    result = result.Replace("{", "");
+        //}
         //Inclui os Nodos Internos em uma pilha para serem percorridos na forma depth-first.
         //public void copyStack()
         //{
