@@ -9,14 +9,14 @@ namespace LexicoSintatico
 {
 	public class GeradorCodigo
 	{
-		private List<Contexto> Contextos;
-		private Contexto CurrentContext;
+		private List<ArvoreCodigo> Contextos;
+		private ArvoreCodigo CurrentContext;
 		private Sintatico Sintatic;
 		private string Error;
 		public GeradorCodigo()
 		{
-			Contextos = new List<Contexto>();
-			CurrentContext = new Contexto(Token.Terminals.DOLLAR);
+			Contextos = new List<ArvoreCodigo>();
+			CurrentContext = new ArvoreCodigo();
 			Contextos.Add(CurrentContext);
 			Sintatic = new Sintatico();
 		}
@@ -65,48 +65,88 @@ namespace LexicoSintatico
 					{
 						searchingTerminal = false;
 						bool success;
-						if (CurrentContext.ChecaSeEhTerminalDoContexto(token.t))
-						{
-							if (CurrentContext.FechaContextoDoPai)
-								CurrentContext = CurrentContext.ContextoPai.ContextoPai;
-							else
-								CurrentContext = CurrentContext.ContextoPai;
-						}
 						switch (token.t)
 						{
-							case Token.Terminals.DEF: // Adicao de Simbolo
-							case Token.Terminals.INTEGER_T: // Adicao de Simbolo
-							case Token.Terminals.FLOAT_T: // Adicao de Simbolo
-							case Token.Terminals.STRING_T: // Adicao de Simbolo
-								if (i == 0)
-								{
-									success = CurrentContext.AddSimbolo(lt[i + 1].s, token.t);
-									if (!success)
-									{
-										SetErrorMessage(last, token.s, "Erro de Contexto: ");
-										return false;
-									}
-									break;
-								}
-								if (!lt[i - 1].t.Equals(Token.Terminals.NEW))
-								{
-									success = CurrentContext.AddSimbolo(lt[i + 1].s, token.t);
-									if (!success)
-									{
-										SetErrorMessage(last, token.s, "Erro de Contexto: ");
-										return false;
-									}
-								}
+							case Token.Terminals.IDENT:
+								break;
+							case Token.Terminals.DEF:
+								break;
+							case Token.Terminals.OPENBRACE:
+								break;
+							case Token.Terminals.CLOSEBRACE:
+								break;
+							case Token.Terminals.OPENBRKT:
+								break;
+							case Token.Terminals.CLOSEBRKT:
+								break;
+							case Token.Terminals.OPENPARENT:
+								break;
+							case Token.Terminals.CLOSEPARENT:
+								break;
+							case Token.Terminals.INT:
+								break;
+							case Token.Terminals.STR:
+								break;
+							case Token.Terminals.FLT:
+								break;
+							case Token.Terminals.INTEGER_T:
+								break;
+							case Token.Terminals.FLOAT_T:
+								break;
+							case Token.Terminals.STRING_T:
+								break;
+							case Token.Terminals.NULL:
+								break;
+							case Token.Terminals.PRINT:
+								break;
+							case Token.Terminals.RETURN:
+								break;
+							case Token.Terminals.READ:
+								break;
+							case Token.Terminals.IF:
+								break;
+							case Token.Terminals.ELSE:
+								break;
+							case Token.Terminals.FOR:
 								break;
 							case Token.Terminals.BREAK:
-								if (!CurrentContext.ChecaSePodeTerBreak())
-								{
-									SetErrorMessage(last, token.s, "break na posição inválida");
-									return false;
-								}
 								break;
-							case Token.Terminals.DOLLAR: // Fim de Passada
-								return true;
+							case Token.Terminals.NEW:
+								break;
+							case Token.Terminals.ASSERT:
+								break;
+							case Token.Terminals.LT:
+								break;
+							case Token.Terminals.LE:
+								break;
+							case Token.Terminals.EQ:
+								break;
+							case Token.Terminals.GT:
+								break;
+							case Token.Terminals.GE:
+								break;
+							case Token.Terminals.NE:
+								break;
+							case Token.Terminals.ADD:
+								break;
+							case Token.Terminals.MINUS:
+								break;
+							case Token.Terminals.MULTIPLY:
+								break;
+							case Token.Terminals.DIVIDE:
+								break;
+							case Token.Terminals.MODULUS:
+								break;
+							case Token.Terminals.SEPARATOR:
+								break;
+							case Token.Terminals.COMMA:
+								break;
+							case Token.Terminals.ERROR:
+								break;
+							case Token.Terminals.EMPTY:
+								break;
+							case Token.Terminals.DOLLAR:
+								break;
 							default:
 								break;
 						}
@@ -114,55 +154,79 @@ namespace LexicoSintatico
 					}
 					else
 					{
-						Contexto temp;
+						ArvoreCodigo temp;
 						NonTerminal nt = pilha.Pop().Nonterminal;
 						switch (nt)
 						{
-							case NonTerminal.FUNCDEF: // Criacao de Contexto
-								temp = CurrentContext.CriaContexto(Token.Terminals.CLOSEBRACE);
-								CurrentContext = temp;
+							case NonTerminal.PROGRAM:
 								break;
-							case NonTerminal.STATEMENT: // Criacao de Contexto
-								if (token.t.Equals(Token.Terminals.OPENBRACE))
-									temp = CurrentContext.CriaContexto(Token.Terminals.CLOSEBRACE);
-								else
-									temp = CurrentContext.CriaContexto(Token.Terminals.SEPARATOR);
-								CurrentContext = temp;
+							case NonTerminal.FUNCLIST:
 								break;
-							case NonTerminal.IF2: // Criacao de Contexto
-								if (!token.t.Equals(Token.Terminals.ELSE))
-									break;
-								temp = CurrentContext.CriaContexto(Token.Terminals.CLOSEBRACE);
-								CurrentContext = temp;
-								CurrentContext.FechaContextoDoPai = true;
+							case NonTerminal.FUNCLIST2:
 								break;
-							case NonTerminal.IFSTAT: // Criacao de Contexto
-								temp = CurrentContext.CriaContexto(Token.Terminals.CLOSEBRACE);
-								CurrentContext = temp;
-								CurrentContext.FechaContextoDoPai = true;
+							case NonTerminal.FUNCDEF:
 								break;
-							case NonTerminal.FORSTAT: // Criacao de Contexto
-								temp = CurrentContext.CriaContexto(Token.Terminals.CLOSEBRACE, true);
-								CurrentContext = temp;
-								CurrentContext.FechaContextoDoPai = true;
+							case NonTerminal.PARAMLIST:
 								break;
-							case NonTerminal.NUMEXPRESSION: // Verificacao de Tipos
-								var tipo = CurrentContext.PegaTipoDoSimbolo(token.s);
-								for (int j = i + 1; j < lt.Count; j++)
-								{
-									var tipo2 = CurrentContext.PegaTipoDoSimbolo(lt[j].s);
-									if (lt[j].a.Equals(Token.Attributes.ASSERT) |
-										lt[j].a.Equals(Token.Attributes.ARITMETHIC) |
-										lt[j].a.Equals(Token.Attributes.COMPARISON) |
-										lt[j].a.Equals(Token.Attributes.BRKTPARE) |
-										lt[j].t.Equals(tipo) |
-										tipo.Equals(tipo2))
-										continue;
-									if (lt[j].a.Equals(Token.Attributes.SEPARATOR))
-										break;
-									SetErrorMessage(nt, lt[j].s, "Operação com atributos inválidos: ");
-									return false;
-								}
+							case NonTerminal.PARAMLIST2:
+								break;
+							case NonTerminal.STATEMENT:
+								break;
+							case NonTerminal.VARDECL:
+								break;
+							case NonTerminal.VAR2:
+								break;
+							case NonTerminal.FUNCCALL:
+								break;
+							case NonTerminal.PARAMLISTCALL:
+								break;
+							case NonTerminal.PARAMLISTCALL2:
+								break;
+							case NonTerminal.ATRIBSTAT:
+								break;
+							case NonTerminal.ATREXP:
+								break;
+							case NonTerminal.PRINTSTAT:
+								break;
+							case NonTerminal.READSTAT:
+								break;
+							case NonTerminal.RETURNSTAT:
+								break;
+							case NonTerminal.IFSTAT:
+								break;
+							case NonTerminal.IF2:
+								break;
+							case NonTerminal.FORSTAT:
+								break;
+							case NonTerminal.STATELIST:
+								break;
+							case NonTerminal.STATE2:
+								break;
+							case NonTerminal.ALLOCEXPRESSION:
+								break;
+							case NonTerminal.ALLOC2:
+								break;
+							case NonTerminal.ALLOC3:
+								break;
+							case NonTerminal.EXPRESSION:
+								break;
+							case NonTerminal.EXP2:
+								break;
+							case NonTerminal.NUMEXPRESSION:
+								break;
+							case NonTerminal.NUM2:
+								break;
+							case NonTerminal.TERM:
+								break;
+							case NonTerminal.TERM2:
+								break;
+							case NonTerminal.UNARYEXPR:
+								break;
+							case NonTerminal.FACTOR:
+								break;
+							case NonTerminal.LVALUE:
+								break;
+							case NonTerminal.EMPTY:
 								break;
 							default:
 								break;
@@ -203,102 +267,39 @@ namespace LexicoSintatico
 			Error = message + "No não terminal: " + nt.ToString() + " com a entrada: " + t;
 		}
 
-		private class Contexto
+		private class ArvoreCodigo
 		{
-			private Dictionary<string, (string, Token.Terminals)> TabelaDeSimbolos { get; set; }
-			public List<Contexto> SubContextos { get; set; }
-			public Contexto ContextoPai { get; set; }
-			private bool IsLoop { get; set; }
-			public List<Token.Terminals> TerminalDoContexto { get; set; }
-			public bool FechaContextoDoPai { get; set; }
+			public string Codigo { get; set; }
+			public List<ArvoreCodigo> SubNodos { get; set; }
+			public ArvoreCodigo NodoPai { get; set; }
 
-			public Contexto(Token.Terminals terminal, bool loop = false, Contexto pai = null)
+			public ArvoreCodigo(string codigo = "", ArvoreCodigo pai = null)
 			{
-				TabelaDeSimbolos = new Dictionary<string, (string, Token.Terminals)>();
-				SubContextos = new List<Contexto>();
-				ContextoPai = pai;
-				if (pai != null)
-					IsLoop = loop | pai.ChecaSePodeTerBreak();
-				else
-					IsLoop = loop;
-				TerminalDoContexto = new List<Token.Terminals>();
-				TerminalDoContexto.Add(terminal);
-				FechaContextoDoPai = false;
+				Codigo = codigo;
+				SubNodos = new List<ArvoreCodigo>();
+				NodoPai = pai;
 			}
 
-			public bool ChecaSeTemSimbolo(string simbolo)
+			public ArvoreCodigo CriaNodoFilho(string codigo)
 			{
-				if (TabelaDeSimbolos.ContainsKey(simbolo))
-					return true;
+				var contexto = new ArvoreCodigo(codigo, this);
 
-				if (ContextoPai != null)
-					if (ContextoPai.ChecaSeTemSimbolo(simbolo))
-						return true;
-
-				return false;
-			}
-
-			public bool ChecaSePodeTerBreak()
-			{
-				return IsLoop;
-			}
-
-			public bool AddSimbolo(string simbolo, Token.Terminals tipo)
-			{
-				if (ChecaSeTemSimbolo(simbolo))
-					return false;
-				TabelaDeSimbolos.Add(simbolo, (simbolo, tipo));
-				return true;
-			}
-
-			public Token.Terminals PegaTipoDoSimbolo(string simbolo)
-			{
-				if (this.TabelaDeSimbolos.ContainsKey(simbolo))
-					return this.TabelaDeSimbolos[simbolo].Item2;
-				else if (this.ContextoPai != null)
-					return this.ContextoPai.PegaTipoDoSimbolo(simbolo);
-				return Token.Terminals.ERROR;
-			}
-
-			public bool ChecaSeSimboloETipoBatem(string simbolo, Token.Terminals tipo)
-			{
-				if (!ChecaSeTemSimbolo(simbolo))
-				{
-					return false;
-				}
-
-				if (TabelaDeSimbolos[simbolo].Item1 == simbolo && TabelaDeSimbolos[simbolo].Item2 == tipo)
-				{
-					return true;
-				}
-				return false;
-			}
-
-			public Contexto CriaContexto(Token.Terminals terminal, bool isloop = false)
-			{
-				bool t = isloop | IsLoop;
-				var contexto = new Contexto(terminal, t, this);
-
-				SubContextos.Add(contexto);
+				SubNodos.Add(contexto);
 
 				return contexto;
 			}
 
-			public bool ChecaSeEhTerminalDoContexto(Token.Terminals term)
-			{
-				return TerminalDoContexto.Contains(term);
-			}
-
 			public void Print(StreamWriter sr)
 			{
-				if (this.TabelaDeSimbolos.Count > 0)
-					sr.WriteLine("Tabela de Símbolos ");
-				foreach (var tab in this.TabelaDeSimbolos)
+				if (this.SubNodos.Count == 0)
 				{
-					sr.WriteLine("Id = " + tab.Value.Item1.ToString() + " Tipo = " + tab.Value.Item2.ToString());
+					sr.Write(this.Codigo + " ");
 				}
-				foreach (var filho in this.SubContextos)
-					filho.Print(sr);
+				else
+					foreach (var s in SubNodos)
+					{
+						s.Print(sr);
+					}
 			}
 		}
 	}
