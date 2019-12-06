@@ -1,6 +1,9 @@
-﻿{
+﻿def programa3()
+{
 	{
 		int V;
+
+		V = programa3();
 
 		int adj[10];
 
