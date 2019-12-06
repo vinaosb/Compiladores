@@ -1,4 +1,4 @@
-﻿programa2 ()
+﻿def programa2()
 {
 	{
 		int i;
